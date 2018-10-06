@@ -17,6 +17,7 @@
     <version>0.1-SNAPSHOT</version>
     <modules>
         <module>Open-Core</module>
+        <module>Open-Master</module>
     </modules>
 
     <properties>
