@@ -4,7 +4,7 @@
  * The code is licensed under the MIT License, which can be found in the root directory of the repository
  */
 
-package app.open.software.master.exception;
+package app.open.software.core.exception;
 
 /**
  * This {@link Exception} should be thrown, if the required Java version is not installed on the current machine

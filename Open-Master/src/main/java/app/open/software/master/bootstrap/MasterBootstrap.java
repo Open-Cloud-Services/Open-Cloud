@@ -6,8 +6,8 @@
 
 package app.open.software.master.bootstrap;
 
+import app.open.software.core.exception.JavaVersionRequiredException;
 import app.open.software.master.Master;
-import app.open.software.master.exception.JavaVersionRequiredException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
