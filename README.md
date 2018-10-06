@@ -2,6 +2,7 @@
 
 | Badge                                                        | Description      |
 | ------------------------------------------------------------ | ---------------- |
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8ac8c407fb4d4411ba201a356ed06315)](https://app.codacy.com/app/Tammo0987/Open-Cloud?utm_source=github.com&utm_medium=referral&utm_content=Open-Cloud-Services/Open-Cloud&utm_campaign=Badge_Grade_Dashboard)
 | [![img](http://githubbadges.com/star.svg?user=Open-Cloud-Services&repo=Open-Cloud)](https://github.com/Open-Cloud-Services/Open-Cloud) | **Star**         |
 | [![img](http://githubbadges.com/fork.svg?user=Open-Cloud-Services&repo=Open-Cloud)](https://github.com/Open-Cloud-Services/Open-Cloud/fork) | **Fork**         |
 | ![img](https://img.shields.io/github/contributors/Open-Cloud-Services/Open-Cloud.svg) | **Contributors** |
