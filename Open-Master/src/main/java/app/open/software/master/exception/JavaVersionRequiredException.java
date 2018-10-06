@@ -10,6 +10,7 @@ package app.open.software.master.exception;
  * This {@link Exception} should be thrown, if the required Java version is not installed on the current machine
  *
  * @author Tammo0987
+ * @version 1.0
  * @since 0.1
  */
 public class JavaVersionRequiredException extends Exception{
