@@ -18,6 +18,7 @@
     <modules>
         <module>Open-Core</module>
         <module>Open-Master</module>
+        <module>Open-Container</module>
     </modules>
 
     <properties>

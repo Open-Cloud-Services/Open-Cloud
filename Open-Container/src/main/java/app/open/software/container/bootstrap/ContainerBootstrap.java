@@ -1,26 +1,20 @@
-/*
- * Copyright (c) 2018, Open-Software and contributors
- *
- * The code is licensed under the MIT License, which can be found in the root directory of the repository
- */
+package app.open.software.container.bootstrap;
 
-package app.open.software.master.bootstrap;
-
+import app.open.software.container.Container;
 import app.open.software.core.exception.JavaVersionRequiredException;
-import app.open.software.master.Master;
 import joptsimple.OptionParser;
 
 /**
- * Main class to bootstrap the Open-Master module and parse the console arguments
+ * Main class to bootstrap the Open-Container module and parse the console arguments
  *
  * @author Tammo0987
  * @version 1.0
  * @since 0.1
  */
-public class MasterBootstrap {
+public class ContainerBootstrap {
 
 	/**
-	 * Main method to start the Open-Master module
+	 * Main method to start the Open-Container module
 	 *
 	 * @param args Console arguments
 	 *
@@ -30,22 +24,21 @@ public class MasterBootstrap {
 		if (Double.parseDouble(System.getProperty("java.class.version")) < 55) {
 			throw new JavaVersionRequiredException();
 		} else {
-			new MasterBootstrap(args);
+			new ContainerBootstrap(args);
 		}
 	}
 
 	/**
-	 * Configure the console arguments and create a new instance of {@link Master}
+	 * Configure the console arguments and create a new instance of {@link Container}
 	 *
 	 * @param args Console arguments
 	 */
-	private MasterBootstrap(final String[] args) {
+	private ContainerBootstrap(final String[] args) {
 		final var parser = new OptionParser();
 		this.acceptArguments(parser);
 
 		final var set = parser.parse(args);
-
-		new Master().start(set);
+		new Container();
 	}
 
 	/**
