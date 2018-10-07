@@ -32,7 +32,7 @@ public class Master implements CloudApplication {
 	public void start(final OptionSet set) {
 		if(master == null) master = this;
 
-		Logger.setContext(new LoggerContext("Open-Master", LogLevel.INFO));
+		Logger.setContext(new LoggerContext("Open-Master", set.has("debug") ? LogLevel.DEBUG : LogLevel.INFO));
 	}
 
 	/**
