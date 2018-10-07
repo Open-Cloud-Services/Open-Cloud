@@ -49,7 +49,6 @@ public interface CloudApplication {
 
 		Logger.info("");
 
-		Logger.info("Open-Cloud");
 		Logger.info("Copyright (c) 2018 by Open-Software and contributors");
 		Logger.info("Java version -> " + System.getProperty("java.version") + ", OS -> " + System.getProperty("os" +
 				".name"));
