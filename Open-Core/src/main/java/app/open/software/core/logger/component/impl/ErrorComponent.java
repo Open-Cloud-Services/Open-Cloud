@@ -48,7 +48,4 @@ public class ErrorComponent implements LoggerComponent {
 		this.onFinish();
 	}
 
-	public void logToFile() {
-
-	}
 }

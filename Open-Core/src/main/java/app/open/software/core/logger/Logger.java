@@ -59,7 +59,6 @@ public class Logger {
 
 		final var component = queue.poll();
 		component.print();
-		component.logToFile();
 	}
 
 }

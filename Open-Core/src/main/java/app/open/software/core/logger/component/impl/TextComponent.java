@@ -50,7 +50,4 @@ public class TextComponent implements LoggerComponent {
 		this.onFinish();
 	}
 
-	public void logToFile() {
-
-	}
 }
