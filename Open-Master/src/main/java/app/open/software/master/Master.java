@@ -7,6 +7,7 @@
 package app.open.software.master;
 
 import app.open.software.core.CloudApplication;
+import app.open.software.core.logger.*;
 import joptsimple.OptionSet;
 import lombok.Getter;
 
@@ -30,6 +31,12 @@ public class Master implements CloudApplication {
 	 */
 	public void start(final OptionSet set) {
 		if(master == null) master = this;
+
+		Logger.setContext(new LoggerContext("Open-Master", LogLevel.INFO));
+
+		Logger.info("Test");
+		Logger.info("Test2");
+		Logger.info("Test1");
 	}
 
 	/**

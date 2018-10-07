@@ -6,3 +6,8 @@
 # Maven
 
 target/
+
+
+# Test Environment
+
+working/

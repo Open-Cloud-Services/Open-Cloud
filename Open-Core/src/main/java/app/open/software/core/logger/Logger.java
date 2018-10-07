@@ -2,6 +2,8 @@ package app.open.software.core.logger;
 
 import app.open.software.core.logger.component.LoggerComponent;
 import app.open.software.core.logger.component.impl.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 import lombok.Getter;
@@ -12,6 +14,8 @@ public class Logger {
 	@Setter
 	@Getter
 	private static LoggerContext context;
+
+	private static final LogFileHandler fileHandler = new LogFileHandler(new File("logs"));
 
 	private static Queue<LoggerComponent> queue = new LinkedBlockingQueue<>();
 
@@ -35,6 +39,11 @@ public class Logger {
 	private static void log(final String log, final LogLevel level) {
 		queue.offer(new TextComponent(log, level));
 		checkQueue();
+		try {
+			fileHandler.log(log);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static ProgressBarComponent progress(final long length) {
