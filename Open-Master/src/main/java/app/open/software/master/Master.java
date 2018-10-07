@@ -12,7 +12,7 @@ import joptsimple.OptionSet;
 import lombok.Getter;
 
 /**
- *
+ * Open-Master main class to control everything
  *
  * @author Tammo0987
  * @version 1.0
