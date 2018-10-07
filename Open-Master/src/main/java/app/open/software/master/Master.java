@@ -33,10 +33,6 @@ public class Master implements CloudApplication {
 		if(master == null) master = this;
 
 		Logger.setContext(new LoggerContext("Open-Master", LogLevel.INFO));
-
-		Logger.info("Test");
-		Logger.info("Test2");
-		Logger.info("Test1");
 	}
 
 	/**

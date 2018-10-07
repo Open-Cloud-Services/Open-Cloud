@@ -1,7 +1,15 @@
+/*
+ * Copyright (c) 2018, Open-Software and contributors
+ *
+ * The code is licensed under the MIT License, which can be found in the root directory of the repository
+ */
+
 package app.open.software.core.logger.component.impl;
 
 import app.open.software.core.logger.*;
 import app.open.software.core.logger.component.LoggerComponent;
+import app.open.software.core.logger.file.ErrorRecord;
+import java.io.IOException;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
 
@@ -30,6 +38,12 @@ public class ErrorComponent implements LoggerComponent {
 		this.exception.printStackTrace();
 
 		System.out.print("\r> ");
+
+		try {
+			Logger.getFileHandler().logError(new ErrorRecord("[" + date + "] " + this.error, this.exception));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		this.onFinish();
 	}

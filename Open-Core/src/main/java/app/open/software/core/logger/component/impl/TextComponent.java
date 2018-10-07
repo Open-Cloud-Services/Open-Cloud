@@ -1,7 +1,14 @@
+/*
+ * Copyright (c) 2018, Open-Software and contributors
+ *
+ * The code is licensed under the MIT License, which can be found in the root directory of the repository
+ */
+
 package app.open.software.core.logger.component.impl;
 
 import app.open.software.core.logger.*;
 import app.open.software.core.logger.component.LoggerComponent;
+import java.io.IOException;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +40,12 @@ public class TextComponent implements LoggerComponent {
 		System.out.println(builder.toString());
 
 		System.out.print("\r> ");
+
+		try {
+			Logger.getFileHandler().log(builder.toString().replace("\r", ""));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		this.onFinish();
 	}
