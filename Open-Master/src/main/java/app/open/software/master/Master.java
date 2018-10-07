@@ -37,7 +37,10 @@ public class Master implements CloudApplication {
 
 		if (set.has("help")) {
 			this.printArgumentHelp();
+			return;
 		}
+
+		this.printStartHeader("Open-Master");
 	}
 
 	/**

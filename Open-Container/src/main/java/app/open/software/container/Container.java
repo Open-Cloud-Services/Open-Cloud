@@ -31,7 +31,10 @@ public class Container implements CloudApplication {
 
 		if (set.has("help")) {
 			this.printArgumentHelp();
+			return;
 		}
+
+		this.printStartHeader("Open-Container");
 	}
 
 	/**
