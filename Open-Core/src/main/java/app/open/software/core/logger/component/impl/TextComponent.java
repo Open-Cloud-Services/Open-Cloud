@@ -12,15 +12,30 @@ import java.io.IOException;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Implementation of the {@link LoggerComponent} for normal log
+ */
 @RequiredArgsConstructor
 public class TextComponent implements LoggerComponent {
 
+	/**
+	 * Content to log
+	 */
 	private final String log;
 
+	/**
+	 * {@link LogLevel} of the log content
+	 */
 	private final LogLevel level;
 
+	/**
+	 * {@link LoggerContext} from the {@link Logger} for formatting
+	 */
 	private final LoggerContext context = Logger.getContext();
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void print() {
 		if (this.level.getLevel() < this.context.getLevel().getLevel()) {
 			this.onFinish();

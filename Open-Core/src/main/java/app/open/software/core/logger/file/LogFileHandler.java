@@ -17,8 +17,18 @@ import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
 
+/**
+ * Handler to handle the logging into files
+ *
+ * @author Tammo0987
+ * @version 1.0
+ * @since 0.1
+ */
 public class LogFileHandler {
 
+	/**
+	 * {@link Path} of the latest log
+	 */
 	private final Path latestLog = new File("logs//latest.log").toPath();
 
 	public LogFileHandler() {
@@ -33,6 +43,13 @@ public class LogFileHandler {
 		}
 	}
 
+	/**
+	 * Log content into the latest log file
+	 *
+	 * @param log Log content
+	 *
+	 * @throws IOException An I/O error occurs
+	 */
 	public void log(final String log) throws IOException {
 		final var logsDir = new File("logs").toPath();
 		this.checkDirectory(logsDir);
@@ -45,6 +62,13 @@ public class LogFileHandler {
 		}
 	}
 
+	/**
+	 * Log an {@link ErrorRecord} to a single new {@link Path}
+	 *
+	 * @param error {@link ErrorRecord} to log
+	 *
+	 * @throws IOException An I/O error occurs
+	 */
 	public void logError(final ErrorRecord error) throws IOException {
 		final Path errorLogDir = new File("errors").toPath();
 		this.checkDirectory(errorLogDir);
@@ -59,6 +83,11 @@ public class LogFileHandler {
 		}
 	}
 
+	/**
+	 * Create directory, if it not exists
+	 *
+	 * @param directory Directory to check
+	 */
 	private void checkDirectory(final Path directory) {
 		if (Files.notExists(directory)) {
 			try {
@@ -69,6 +98,11 @@ public class LogFileHandler {
 		}
 	}
 
+	/**
+	 * Create {@link Path}, if it not exists
+	 *
+	 * @param file {@link Path} to check
+	 */
 	private void checkFile(final Path file) {
 		if (Files.notExists(file)) {
 			try {
@@ -79,11 +113,24 @@ public class LogFileHandler {
 		}
 	}
 
+	/**
+	 * Put the latest log {@link Path} into an zip archive
+	 *
+	 * @throws ZipException An I/O error occurs
+	 * @throws IOException An I/O error occurs
+	 */
 	private void archiveLatestLog() throws ZipException, IOException {
 		final var zipFile = new ZipFile(this.getNameForZip(this.testZipId()));
 		zipFile.addFile(this.latestLog.toFile(), this.getZipParameters());
 	}
 
+	/**
+	 * @return Name for the zip file
+	 *
+	 * @param count Unique id of the zip archive
+	 *
+	 * @throws IOException An I/O error occurs
+	 */
 	private String getNameForZip(final int count) throws IOException {
 		final var time = Files.getLastModifiedTime(this.latestLog);
 		final Calendar calendar = Calendar.getInstance();
@@ -99,6 +146,11 @@ public class LogFileHandler {
 		return builder.toString();
 	}
 
+	/**
+	 * @return Next unique id for an specific date
+	 *
+	 * @throws IOException An I/O error occurs
+	 */
 	private int testZipId() throws IOException {
 		int id = 1;
 		while (Files.exists(new File(this.getNameForZip(id)).toPath())) {
@@ -107,14 +159,21 @@ public class LogFileHandler {
 		return id;
 	}
 
+	/**
+	 * @return {@link ZipParameters} to create the zip archive
+	 */
 	private ZipParameters getZipParameters() {
 		final var parameters = new ZipParameters();
 		parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
 		parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
-
 		return parameters;
 	}
 
+	/**
+	 * @return Serialized {@link ErrorRecord} object
+	 *
+	 * @param error {@link ErrorRecord} to serialize
+	 */
 	private String serializeException(final ErrorRecord error) {
 		return new GsonBuilder().setPrettyPrinting().addSerializationExclusionStrategy(new ExclusionStrategy() {
 

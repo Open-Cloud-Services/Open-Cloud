@@ -11,15 +11,34 @@ import app.open.software.core.logger.component.LoggerComponent;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Implementation from the {@link LoggerComponent} to print a progress bar
+ *
+ * @author Tammo0987
+ * @version 1.0
+ * @since 0.1
+ */
 @RequiredArgsConstructor
 public class ProgressBarComponent implements LoggerComponent {
 
+	/**
+	 * Length of the downloaded file in bytes
+	 */
 	private final long length;
 
+	/**
+	 * Current downloaded bytes
+	 */
 	private long current;
 
+	/**
+	 * {@link LoggerContext} from the {@link Logger} for formatting
+	 */
 	private final LoggerContext context = Logger.getContext();
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void print() {
 		final var percent = this.getPercent();
 		final var date = this.context.getDateFormat().format(new Date());
@@ -41,15 +60,26 @@ public class ProgressBarComponent implements LoggerComponent {
 		}
 	}
 
+	/**
+	 * Update the size of current downloaded bytes
+	 *
+	 * @param current Current downloaded bytes
+	 */
 	public void updateProgress(final long current) {
 		this.current = current;
 		this.print();
 	}
 
+	/**
+	 * @return The progress as percent
+	 */
 	private int getPercent() {
 		return (int) (((double) this.current / this.length) * 100);
 	}
 
+	/**
+	 * @return Progress bar as a {@link String}
+	 */
 	private String createProgress() {
 		var percent = this.getPercent() / 4;
 		final var builder = new StringBuilder("[");
