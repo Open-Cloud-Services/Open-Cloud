@@ -55,9 +55,9 @@ public class MasterBootstrap {
 	 * @param parser {@link OptionParser} for accepting
 	 */
 	private void acceptArguments(final OptionParser parser) {
-		parser.accepts("debug");
 		parser.accepts("help");
 		parser.accepts("version");
+		parser.accepts("debug");
 	}
 
 }
