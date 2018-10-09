@@ -22,8 +22,9 @@ public interface CloudApplication {
 	 * Starts the {@link CloudApplication}
 	 *
 	 * @param set {@link OptionSet} of the console arguments
+	 * @param startUpTime Time in ms, when the application was started
 	 */
-	void start(final OptionSet set);
+	void start(final OptionSet set, final long startUpTime);
 
 	/**
 	 * Stops the {@link CloudApplication}

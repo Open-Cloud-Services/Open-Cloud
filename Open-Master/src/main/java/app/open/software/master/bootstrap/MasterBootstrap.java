@@ -40,12 +40,14 @@ public class MasterBootstrap {
 	 * @param args Console arguments
 	 */
 	private MasterBootstrap(final String[] args) {
+		final var startUpTime = System.currentTimeMillis();
+
 		final var parser = new OptionParser();
 		this.acceptArguments(parser);
 
 		final var set = parser.parse(args);
 
-		new Master().start(set);
+		new Master().start(set, startUpTime);
 	}
 
 	/**
@@ -57,6 +59,7 @@ public class MasterBootstrap {
 		parser.accepts("help");
 		parser.accepts("version");
 		parser.accepts("debug");
+		parser.accepts("startuptime");
 	}
 
 }

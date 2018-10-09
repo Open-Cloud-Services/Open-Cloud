@@ -34,11 +34,14 @@ public class ContainerBootstrap {
 	 * @param args Console arguments
 	 */
 	private ContainerBootstrap(final String[] args) {
+		final var startUpTime = System.currentTimeMillis();
+
 		final var parser = new OptionParser();
 		this.acceptArguments(parser);
 
 		final var set = parser.parse(args);
-		new Container();
+
+		new Container().start(set, startUpTime);
 	}
 
 	/**
@@ -50,6 +53,7 @@ public class ContainerBootstrap {
 		parser.accepts("help");
 		parser.accepts("version");
 		parser.accepts("debug");
+		parser.accepts("startuptime");
 	}
 
 }

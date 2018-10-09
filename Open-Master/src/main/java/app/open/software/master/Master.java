@@ -30,7 +30,7 @@ public class Master implements CloudApplication {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void start(final OptionSet set) {
+	public void start(final OptionSet set, final long startUpTime) {
 		if(master == null) master = this;
 
 		Logger.setContext(new LoggerContext("Open-Master", set.has("debug") ? LogLevel.DEBUG : LogLevel.INFO));
@@ -41,6 +41,10 @@ public class Master implements CloudApplication {
 		}
 
 		this.printStartHeader("Open-Master");
+
+		if (set.has("startuptime")) {
+			Logger.info("Time to start: " + (System.currentTimeMillis() - startUpTime) + " ms");
+		}
 	}
 
 	/**
@@ -58,6 +62,7 @@ public class Master implements CloudApplication {
 		map.put("help", "Print all possible runtime arguments");
 		map.put("version", "Print the current version of Open-Cloud");
 		map.put("debug", "Enable debug logging");
+		map.put("startuptime", "Show after starting the time to start");
 
 		Logger.info("Open-Cloud Help:");
 		Logger.info("");
