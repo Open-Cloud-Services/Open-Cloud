@@ -8,22 +8,39 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>app.open.software</groupId>
-    <artifactId>parent</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>Open-Master</artifactId>
     <version>0.1-SNAPSHOT</version>
-    <modules>
-        <module>Open-Core</module>
-        <module>Open-Master</module>
-        <module>Open-Container</module>
-    </modules>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
+
+    <dependencies>
+
+        <!-- https://mvnrepository.com/artifact/net.sf.jopt-simple/jopt-simple -->
+        <dependency>
+            <groupId>net.sf.jopt-simple</groupId>
+            <artifactId>jopt-simple</artifactId>
+            <version>5.0.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>app.open.software</groupId>
+            <artifactId>Open-Core</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+
+    </dependencies>
+
 
 </project>
