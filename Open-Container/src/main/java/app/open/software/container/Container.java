@@ -4,7 +4,7 @@
  * The code is licensed under the MIT License, which can be found in the root directory of the repository
  */
 
-package app.open.software.master;
+package app.open.software.container;
 
 import app.open.software.core.CloudApplication;
 import app.open.software.core.logger.*;
@@ -13,34 +13,34 @@ import joptsimple.OptionSet;
 import lombok.Getter;
 
 /**
- * Open-Master main class to control everything
+ * Open-Container main class to control everything
  *
  * @author Tammo0987
- * @version 1.1
+ * @version 1.0
  * @since 0.1
  */
-public class Master implements CloudApplication {
+public class Container implements CloudApplication {
 
 	/**
-	 * Singleton instance of {@link Master}
+	 * Singleton instance of {@link Container}
 	 */
 	@Getter
-	private static Master master;
+	private static Container container;
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public void start(final OptionSet set, final long startUpTime) {
-		if(master == null) master = this;
+		if(container == null) container = this;
 
-		Logger.setContext(new LoggerContext("Open-Master", set.has("debug") ? LogLevel.DEBUG : LogLevel.INFO));
+		Logger.setContext(new LoggerContext("Open-Container", set.has("debug") ? LogLevel.DEBUG : LogLevel.INFO));
 
 		if (set.has("help")) {
 			this.printArgumentHelp();
 			return;
 		}
 
-		this.printStartHeader("Open-Master");
+		this.printStartHeader("Open-Container");
 
 		if (set.has("startuptime")) {
 			Logger.info("Time to start: " + (System.currentTimeMillis() - startUpTime) + " ms");
@@ -69,4 +69,5 @@ public class Master implements CloudApplication {
 		map.forEach((name, description) -> Logger.info(name + " -> " + description));
 		Logger.info("");
 	}
+
 }

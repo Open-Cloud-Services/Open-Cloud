@@ -6,6 +6,7 @@
 
 package app.open.software.core;
 
+import app.open.software.core.logger.Logger;
 import joptsimple.OptionSet;
 
 /**
@@ -21,8 +22,9 @@ public interface CloudApplication {
 	 * Starts the {@link CloudApplication}
 	 *
 	 * @param set {@link OptionSet} of the console arguments
+	 * @param startUpTime Time in ms, when the application was started
 	 */
-	void start(final OptionSet set);
+	void start(final OptionSet set, final long startUpTime);
 
 	/**
 	 * Stops the {@link CloudApplication}
@@ -35,7 +37,26 @@ public interface CloudApplication {
 	 * @param module Name from the started {@link CloudApplication}
 	 */
 	default void printStartHeader(final String module) {
-		//TODO Implement Logger first to print the Header
+		Logger.info("   ____                      _____ _                 _       ");
+		Logger.info("  / __ \\                    / ____| |               | |     ");
+		Logger.info(" | |  | |_ __   ___ _ __   | |    | | ___  _   _  __| |      ");
+		Logger.info(" | |  | | '_ \\ / _ \\ '_ \\  | |    | |/ _ \\| | | |/ _` |  ");
+		Logger.info(" | |__| | |_) |  __/ | | | | |____| | (_) | |_| | (_| |      ");
+		Logger.info("  \\____/| .__/ \\___|_| |_|  \\_____|_|\\___/ \\__,_|\\__,_|");
+		Logger.info("        | |                                                  ");
+		Logger.info("        |_|                                                  ");
+
+		this.delay(200);
+
+		Logger.info("");
+
+		Logger.info("Copyright (c) 2018 by Open-Software and contributors");
+		Logger.info("Java version -> " + System.getProperty("java.version") + ", OS -> " + System.getProperty("os.name"));
+		Logger.info("");
+
+		this.delay(200);
+
+		Logger.info("Starting " + module + "!");
 	}
 
 	/**
