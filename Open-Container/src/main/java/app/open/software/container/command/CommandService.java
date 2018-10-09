@@ -12,14 +12,22 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- *
+ * {@link Service} to handle all the {@link Command}s
  *
  * @author Tammo0987, x7Airworker
+ * @version 1.0
+ * @since 0.1
  */
 public class CommandService implements Service {
 
+	/**
+	 * {@link Map} to hold all the {@link Command} with the name or alias as the key
+	 */
 	private final Map<String, Command> commands = new HashMap<>();
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void init() {
 		try {
 			ClassPath.from(this.getClass().getClassLoader()).getTopLevelClassesRecursive("app.open.software")
@@ -40,6 +48,11 @@ public class CommandService implements Service {
 		}
 	}
 
+	/**
+	 * Execute a command by the console input
+	 *
+	 * @param message Console input
+	 */
 	public void executeCommand(final String message) {
 		final var arguments = message.split("\\s+");
 
