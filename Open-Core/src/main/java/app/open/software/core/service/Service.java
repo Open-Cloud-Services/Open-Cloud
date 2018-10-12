@@ -4,7 +4,7 @@
  * The code is licensed under the MIT License, which can be found in the root directory of the repository
  */
 
-package app.open.software.container.service;
+package app.open.software.core.service;
 
 /**
  * Interface which can be implemented, to add a class to the {@link ServiceCluster} to get them as a {@link Service}

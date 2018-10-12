@@ -4,7 +4,7 @@
  * The code is licensed under the MIT License, which can be found in the root directory of the repository
  */
 
-package app.open.software.container.command;
+package app.open.software.core.command;
 
 import java.lang.annotation.*;
 

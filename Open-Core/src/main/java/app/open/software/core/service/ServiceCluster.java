@@ -4,7 +4,7 @@
  * The code is licensed under the MIT License, which can be found in the root directory of the repository
  */
 
-package app.open.software.container.service;
+package app.open.software.core.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
