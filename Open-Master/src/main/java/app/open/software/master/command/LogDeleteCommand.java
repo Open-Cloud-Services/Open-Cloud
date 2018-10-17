@@ -4,7 +4,7 @@ import app.open.software.core.command.Command;
 import app.open.software.core.command.CommandHelper;
 import app.open.software.core.logger.Logger;
 
-@Command.Info(names = "log", description = "")
+@Command.Info(names = "log", description = "Deletes the log files")
 public class LogDeleteCommand implements Command {
 
 	/**
