@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Date;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -98,6 +99,16 @@ public class LogFileHandler {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public void deleteLogFiles() {
+		Arrays.stream(new File("logs").listFiles()).forEach(file -> {
+			try {
+				Files.delete(file.toPath());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 
 	/**
