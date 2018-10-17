@@ -4,6 +4,9 @@
 *.iml
 
 # Gradle
+
+/out/
+/build/
 gradle/
 gradlew.bat
 gradlew

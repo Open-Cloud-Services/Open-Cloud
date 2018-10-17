@@ -8,4 +8,10 @@ jar {
         attributes 'Implementation-Title': project.name
         attributes 'Implementation-Version': version
     }
+
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
 }
