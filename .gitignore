@@ -3,9 +3,10 @@
 /.idea/
 *.iml
 
-# Maven
-
-target/
+# Gradle
+gradle/
+gradlew.bat
+gradlew
 
 
 # Test Environment
