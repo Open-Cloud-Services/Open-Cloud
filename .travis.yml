@@ -1,14 +1,13 @@
 language: java
+install: true
 
 jdk:
   - oraclejdk11
 
 sudo: false
 
-jobs:
-  include:
-  - stage: compile
-    script: mvn clean install -Dmaven.javadoc.skip=true -B -V
+script:
+  - gradle --version
 
 notifications:
   email: false

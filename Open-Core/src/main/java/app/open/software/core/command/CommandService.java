@@ -4,11 +4,12 @@
  * The code is licensed under the MIT License, which can be found in the root directory of the repository
  */
 
-package app.open.software.container.command;
+package app.open.software.core.command;
 
-import app.open.software.container.service.Service;
+import app.open.software.core.service.Service;
+import app.open.software.core.thread.ThreadBuilder;
 import com.google.common.reflect.ClassPath;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -24,6 +25,11 @@ public class CommandService implements Service {
 	 * {@link Map} to hold all the {@link Command} with the name or alias as the key
 	 */
 	private final Map<String, Command> commands = new HashMap<>();
+
+	/**
+	 * Command-{@link Thread} is running
+	 */
+	private boolean running;
 
 	/**
 	 * {@inheritDoc}
@@ -49,11 +55,37 @@ public class CommandService implements Service {
 	}
 
 	/**
+	 * Start the Command-Dispatcher {@link Thread}
+	 */
+	public void start() {
+		this.running = true;
+
+		new ThreadBuilder("Command-Dispatcher", () -> {
+			final var reader = new BufferedReader(new InputStreamReader(System.in));
+			try {
+				String input;
+				while (this.running && (input = reader.readLine()) != null) {
+					this.dispatchCommand(input);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}).start();
+	}
+
+	/**
+	 * Stop the Command-Dispatcher {@link Thread}
+	 */
+	public void stop() {
+		this.running = false;
+	}
+
+	/**
 	 * Execute a command by the console input
 	 *
 	 * @param message Console input
 	 */
-	public void executeCommand(final String message) {
+	private void dispatchCommand(final String message) {
 		final var arguments = message.split("\\s+");
 
 		final var command = this.commands.get(arguments[0]);
