@@ -10,7 +10,9 @@ import com.google.gson.*;
 import java.io.*;
 import java.nio.file.*;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -29,7 +31,7 @@ public class LogFileHandler {
 	/**
 	 * {@link Path} of the latest log
 	 */
-	private final Path latestLog = new File("logs//latest.log").toPath();
+	private final Path latestLog = new File("logs/latest.log").toPath();
 
 	public LogFileHandler() {
 		if (Files.exists(this.latestLog)) {
@@ -132,14 +134,11 @@ public class LogFileHandler {
 	 * @throws IOException An I/O error occurs
 	 */
 	private String getNameForZip(final int count) throws IOException {
-		final var time = Files.getLastModifiedTime(this.latestLog);
-		final Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(time.toMillis());
+		final var millis = Files.getLastModifiedTime(this.latestLog);
+		final var date = Instant.ofEpochMilli(millis.toMillis()).atZone(ZoneId.systemDefault()).toLocalDate();
 
-		final var builder = new StringBuilder("logs//");
-		builder.append(calendar.get(Calendar.YEAR)).append("-");
-		builder.append(calendar.get(Calendar.MONTH) + 1).append("-");
-		builder.append(calendar.get(Calendar.DAY_OF_MONTH));
+		final var builder = new StringBuilder("logs/");
+		builder.append(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(date));
 		builder.append("-").append(count);
 		builder.append(".log.zip");
 

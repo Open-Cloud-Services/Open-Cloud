@@ -43,6 +43,7 @@ public class MasterBootstrap {
 		final var startUpTime = System.currentTimeMillis();
 
 		final var parser = new OptionParser();
+		parser.allowsUnrecognizedOptions();
 		this.acceptArguments(parser);
 
 		final var set = parser.parse(args);
