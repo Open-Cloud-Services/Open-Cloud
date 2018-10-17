@@ -7,7 +7,7 @@ jdk:
 sudo: false
 
 script:
-  - ./gradlew check
+  - gradle --version
 
 notifications:
   email: false
