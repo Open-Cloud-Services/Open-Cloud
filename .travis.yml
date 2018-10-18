@@ -9,8 +9,9 @@ sudo: false
 script:
   - java -version
   - wget https://services.gradle.org/distributions/gradle-4.9-bin.zip
-  - apt-get install unzip
   - ls
+  - mkdir ../.gradle
+  - tar -xf gradle-4.9-bin.zip ../.gradle
 
 notifications:
   email: false
