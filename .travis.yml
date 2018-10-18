@@ -2,11 +2,12 @@ language: java
 install: true
 
 jdk:
-  - oraclejdk11
+  - openjdk11
 
 sudo: false
 
 script:
+  - java -version
   - gradle --version
 
 notifications:
