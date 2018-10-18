@@ -6,8 +6,10 @@ jdk:
 
 sudo: false
 
+before_install:
+  - chmod +x gradlew
+
 script:
-  - git update-index --chmod=+x gradlew
   - ./gradlew --version
 
 notifications:
