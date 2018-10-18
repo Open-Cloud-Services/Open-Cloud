@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Date;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -100,6 +101,16 @@ public class LogFileHandler {
 		}
 	}
 
+	public void deleteLogFiles() {
+		Arrays.stream(new File("logs").listFiles()).forEach(file -> {
+			try {
+				Files.delete(file.toPath());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+	}
+
 	/**
 	 * Create {@link Path}, if it not exists
 	 *
@@ -122,40 +133,24 @@ public class LogFileHandler {
 	 * @throws IOException An I/O error occurs
 	 */
 	private void archiveLatestLog() throws ZipException, IOException {
-		final var zipFile = new ZipFile(this.getNameForZip(this.testZipId()));
+		final var zipFile = new ZipFile(this.getNameForZip());
 		zipFile.addFile(this.latestLog.toFile(), this.getZipParameters());
 	}
 
 	/**
 	 * @return Name for the zip file
 	 *
-	 * @param count Unique id of the zip archive
-	 *
-	 * @throws IOException An I/O error occurs
+	 *  @throws IOException An I/O error occurs
 	 */
-	private String getNameForZip(final int count) throws IOException {
+	private String getNameForZip() throws IOException {
 		final var millis = Files.getLastModifiedTime(this.latestLog);
-		final var date = Instant.ofEpochMilli(millis.toMillis()).atZone(ZoneId.systemDefault()).toLocalDate();
+		final var date = Instant.ofEpochMilli(millis.toMillis()).atZone(ZoneId.systemDefault()).toLocalDateTime();
 
 		final var builder = new StringBuilder("logs/");
-		builder.append(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(date));
-		builder.append("-").append(count);
+		builder.append(DateTimeFormatter.ofPattern("yyyy-MM-dd--HH-mm").format(date));
 		builder.append(".log.zip");
 
 		return builder.toString();
-	}
-
-	/**
-	 * @return Next unique id for an specific date
-	 *
-	 * @throws IOException An I/O error occurs
-	 */
-	private int testZipId() throws IOException {
-		int id = 1;
-		while (Files.exists(new File(this.getNameForZip(id)).toPath())) {
-			id++;
-		}
-		return id;
 	}
 
 	/**

@@ -17,7 +17,7 @@ import app.open.software.master.Master;
  * @version 1.0
  * @since 0.1
  */
-@Command.Info(names = {"stop", "shutdown", "exit"}, description = "")
+@Command.Info(names = {"stop", "shutdown", "exit"}, description = "Stops the Open-Master")
 public class StopCommand implements Command {
 
 	/**

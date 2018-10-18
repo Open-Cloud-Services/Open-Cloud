@@ -6,6 +6,7 @@
 
 package app.open.software.core.command;
 
+import app.open.software.core.logger.Logger;
 import app.open.software.core.service.Service;
 import app.open.software.core.thread.ThreadBuilder;
 import com.google.common.reflect.ClassPath;
@@ -89,7 +90,10 @@ public class CommandService implements Service {
 		final var arguments = message.split("\\s+");
 
 		final var command = this.commands.get(arguments[0]);
-		if(command == null) return;
+		if(command == null){
+			Logger.info("Unknown command! Type help for help...");
+			return;
+		}
 
 		final var newArgs = new String[arguments.length - 1];
 		System.arraycopy(arguments, 1, newArgs, 0, newArgs.length);

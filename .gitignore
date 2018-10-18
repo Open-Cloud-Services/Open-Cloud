@@ -4,9 +4,11 @@
 *.iml
 
 # Gradle
-gradle/
+
+/out/
+/build/
 gradlew.bat
-gradlew
+.gradle/
 
 
 # Test Environment

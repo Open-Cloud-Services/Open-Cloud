@@ -6,8 +6,12 @@ jdk:
 
 sudo: false
 
+before_install:
+  - chmod +x gradlew
+
 script:
-  - gradle --version
+  - ./gradlew clean
+  - ./gradlew build
 
 notifications:
   email: false

@@ -35,6 +35,18 @@ public class CommandHelper {
 	/**
 	 * Add sub commands to the list
 	 *
+	 * @param help Array of sub commands
+	 *
+	 * @return Instance to pass the builder pattern
+	 */
+	public CommandHelper addToHepList(final String... help) {
+		this.helpList.addAll(Arrays.asList(help));
+		return this;
+	}
+
+	/**
+	 * Add sub commands to the list
+	 *
 	 * @param help Array of the sub commmands
 	 */
 	public void addToHelpList(final String... help) {
@@ -44,7 +56,7 @@ public class CommandHelper {
 	/**
 	 * Print the help in the console
 	 */
-	void printHelp() {
+	protected void printHelp() {
 		Logger.info("<-- Command Help -->");
 		Logger.info(this.command);
 		this.helpList.forEach(Logger::info);
