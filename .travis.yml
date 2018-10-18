@@ -7,8 +7,8 @@ jdk:
 sudo: false
 
 script:
-  - java -version
-  - ./gradlew check
+  - git update-index --chmod=+x gradlew
+  - ./gradlew --version
 
 notifications:
   email: false
