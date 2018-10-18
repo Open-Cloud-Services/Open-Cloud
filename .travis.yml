@@ -12,6 +12,7 @@ script:
   - ls
   - mkdir ../.gradle
   - unzip gradle-4.9-bin.zip -d ../.gradle
+  - ./gradlew --version
 
 notifications:
   email: false
