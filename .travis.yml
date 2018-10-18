@@ -8,7 +8,7 @@ sudo: false
 
 script:
   - java -version
-  - ./gradlew --version
+  - ./gradlew check
 
 notifications:
   email: false
