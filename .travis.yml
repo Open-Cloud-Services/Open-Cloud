@@ -8,10 +8,9 @@ sudo: false
 
 script:
   - java -version
-  - gradlew
-  - gradle --version
-  - gradle wrapper --gradle-version 4.9
-  - ./gradlew --version
+  - wget https://services.gradle.org/distributions/gradle-4.9-bin.zip
+  - apt-get install unzip
+  - ls
 
 notifications:
   email: false
