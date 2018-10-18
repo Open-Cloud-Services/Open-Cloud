@@ -10,7 +10,7 @@ script:
   - java -version
   - gradle --version
   - gradle wrapper --gradle-version 4.9
-  - gradle --version
+  - ./gradlew --version
 
 notifications:
   email: false
