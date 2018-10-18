@@ -6,6 +6,7 @@
 | [![img](http://githubbadges.com/fork.svg?user=Open-Cloud-Services&repo=Open-Cloud)](https://github.com/Open-Cloud-Services/Open-Cloud/fork) | **Fork**         |
 | ![img](https://img.shields.io/github/contributors/Open-Cloud-Services/Open-Cloud.svg) | **Contributors** |
 | [![img](https://discordapp.com/api/guilds/443134690329886720/embed.png)](https://discordapp.com/invite/XynmGDC) | **Discord**      |
+| [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a381f2d29c8e44a6ba174bf57aee7bd0)](https://www.codacy.com/app/Tammo0987/Open-Cloud?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Open-Cloud-Services/Open-Cloud&amp;utm_campaign=Badge_Grade) | **Codacy Level** |
 
 ---
 
