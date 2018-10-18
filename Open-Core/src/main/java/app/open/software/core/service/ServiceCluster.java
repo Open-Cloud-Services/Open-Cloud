@@ -47,7 +47,7 @@ public class ServiceCluster {
 	 * @param <T> Type of the {@link Service} to cast it automatically to the wanted {@link Service}
 	 */
 	public static <T extends Service> T get(final Class<T> type) {
-		return type.cast(serviceList.stream().filter(service -> service.getClass() == type).findFirst().get());
+		return type.cast(serviceList.stream().filter(service -> service.getClass() == type).findFirst().orElse(null));
 	}
 
 }
