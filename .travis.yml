@@ -8,6 +8,7 @@ sudo: false
 
 script:
   - java -version
+  - ./gradlew assemble
   - ./gradlew --version
 
 notifications:
