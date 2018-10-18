@@ -8,6 +8,7 @@
 /out/
 /build/
 gradlew.bat
+.gradle/
 
 
 # Test Environment
