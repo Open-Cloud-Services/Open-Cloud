@@ -56,7 +56,7 @@ public class CommandHelper {
 	/**
 	 * Print the help in the console
 	 */
-	void printHelp() {
+	protected void printHelp() {
 		Logger.info("<-- Command Help -->");
 		Logger.info(this.command);
 		this.helpList.forEach(Logger::info);
