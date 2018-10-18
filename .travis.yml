@@ -8,6 +8,7 @@ sudo: false
 
 script:
   - java -version
+  - gradlew --version
   - gradle --version
   - gradle wrapper --gradle-version 4.9
   - ./gradlew --version
