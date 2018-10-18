@@ -9,7 +9,6 @@
 /build/
 gradle/
 gradlew.bat
-gradlew
 
 
 # Test Environment
