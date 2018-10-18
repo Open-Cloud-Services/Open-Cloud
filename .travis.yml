@@ -8,8 +8,8 @@ sudo: false
 
 script:
   - java -version
-  - ./gradlew assemble
-  - ./gradlew --version
+  - gradle --version
+  - gradle wrapper --gradle-version 4.9
 
 notifications:
   email: false
