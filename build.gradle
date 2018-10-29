@@ -1,10 +1,12 @@
+version '0.1'
+
 subprojects {
 
     apply plugin: 'java'
     apply plugin: 'idea'
 
     group 'app.open.software'
-    version = '0.1'
+    version rootProject.version
 
     repositories {
         mavenCentral()
@@ -19,6 +21,15 @@ subprojects {
     sourceCompatibility = 11
     targetCompatibility = 11
 
-    compileJava.options.encoding = 'UTF-8'
+    compileJava.options.encoding 'UTF-8'
+}
 
+task createReleaseZip(type: Zip) {
+    from('.') {
+        include('LICENSE')
+        include('README.md')
+    }
+
+    archiveName 'Open-Cloud-Release-' + this.version.toString() + ".zip"
+    destinationDir = file("${buildDir}/zip")
 }

@@ -1,3 +1,25 @@
+buildscript {
+
+    repositories {
+        jcenter()
+    }
+
+    dependencies{
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.2'
+    }
+
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+
 dependencies {
     compile project(':Open-Core')
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'app.open.software.container.bootstrap.ContainerBootstrap'
+        attributes 'Implementation-Title': project.name
+        attributes 'Implementation-Version': version
+    }
 }
