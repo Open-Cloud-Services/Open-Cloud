@@ -10,6 +10,7 @@ import app.open.software.core.CloudApplication;
 import app.open.software.core.command.CommandService;
 import app.open.software.core.logger.*;
 import app.open.software.core.service.ServiceCluster;
+import com.bugsnag.Bugsnag;
 import java.util.HashMap;
 import joptsimple.OptionSet;
 import lombok.Getter;
@@ -29,13 +30,18 @@ public class Master implements CloudApplication {
 	@Getter
 	private static Master master;
 
+	@Getter
+	private final Bugsnag bugsnag = new Bugsnag("d8ac771afd1e29321b2176016a8fa951");
+
 	/**
 	 * {@inheritDoc}
 	 */
-	public void start(final OptionSet set, final long startUpTime) {
+	public void start(final OptionSet set, final long time) {
 		if(master == null) master = this;
 
-		Logger.setContext(new LoggerContext("Open-Master", set.has("debug") ? LogLevel.DEBUG : LogLevel.INFO));
+		this.initBugsnag();
+
+		Logger.setContext(new LoggerContext("Open-Master", set.has("debug") ? LogLevel.DEBUG : LogLevel.INFO, this.bugsnag));
 
 		if (set.has("help")) {
 			this.printArgumentHelp();
@@ -44,8 +50,8 @@ public class Master implements CloudApplication {
 
 		this.printStartHeader("Open-Master");
 
-		if (set.has("startuptime")) {
-			Logger.info("Time to start: " + (System.currentTimeMillis() - startUpTime) + " ms");
+		if (set.has("time")) {
+			Logger.info("Time to start: " + (System.currentTimeMillis() - time) + " ms");
 		}
 
 		ServiceCluster.addServices(new CommandService());
@@ -63,6 +69,21 @@ public class Master implements CloudApplication {
 		ServiceCluster.get(CommandService.class).stop();
 
 		Logger.info("Stopped Open-Master");
+
+		System.exit(0);
+	}
+
+	/**
+	 * Init instance of {@link Bugsnag} to identify reported errors
+	 */
+	private void initBugsnag() {
+		this.bugsnag.setAppVersion(this.getVersion());
+		this.bugsnag.addCallback(report -> {
+			if (this.getVersion().equals("Dev-Version")) {
+				report.cancel();
+			}
+			report.setAppInfo("Module", "Open-Master");
+		});
 	}
 
 	/**
@@ -73,11 +94,12 @@ public class Master implements CloudApplication {
 		map.put("help", "Print all possible runtime arguments");
 		map.put("version", "Print the current version of Open-Cloud");
 		map.put("debug", "Enable debug logging");
-		map.put("startuptime", "Show after starting the time to start");
+		map.put("time", "Show after starting the time to start");
 
 		Logger.info("Open-Cloud Help:");
 		Logger.info("");
 		map.forEach((name, description) -> Logger.info(name + " -> " + description));
 		Logger.info("");
 	}
+
 }

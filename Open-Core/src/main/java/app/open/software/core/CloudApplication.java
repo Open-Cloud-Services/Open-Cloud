@@ -22,9 +22,9 @@ public interface CloudApplication {
 	 * Starts the {@link CloudApplication}
 	 *
 	 * @param set {@link OptionSet} of the console arguments
-	 * @param startUpTime Time in ms, when the application was started
+	 * @param time Time in ms, when the application was started
 	 */
-	void start(final OptionSet set, final long startUpTime);
+	void start(final OptionSet set, final long time);
 
 	/**
 	 * Stops the {@link CloudApplication}
@@ -70,6 +70,14 @@ public interface CloudApplication {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * @return Version of the system
+	 */
+	default String getVersion() {
+		final String version = this.getClass().getPackage().getImplementationVersion();
+		return version == null ? "Dev-Version" : version;
 	}
 
 }

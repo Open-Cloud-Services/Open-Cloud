@@ -1,21 +1,48 @@
-group 'app.open.software'
 version '0.1'
+
+apply plugin: 'java'
 
 subprojects {
 
     apply plugin: 'java'
+    apply plugin: 'idea'
 
     group 'app.open.software'
-    version = '0.1'
+    version rootProject.version
 
     repositories {
         mavenCentral()
     }
 
     dependencies {
-        testImplementation 'junit:junit:4.12'
+        testCompile 'junit:junit:4.12'
+        testCompile 'org.mockito:mockito-all:1.10.19'
+
+        compileOnly 'org.projectlombok:lombok:1.18.2'
     }
 
     sourceCompatibility = 11
     targetCompatibility = 11
+
+    compileJava.options.encoding 'UTF-8'
+}
+
+task createReleaseZip(type: Zip, dependsOn: ['Open-Container:shadowJar', 'Open-Master:shadowJar']) {
+    println("Configure Zip File")
+    
+    from('.') {
+        include('LICENSE')
+        include('README.md')
+    }
+
+    from('Open-Container/build/libs') {
+        include('Open-Container-' + this.version.toString() + '-all.jar')
+    }
+
+    from('Open-Master/build/libs') {
+        include('Open-Master-' + this.version.toString() + "-all.jar")
+    }
+
+    archiveName 'Open-Cloud-Release-' + this.version.toString() + ".zip"
+    destinationDir = file("${buildDir}/zip")
 }

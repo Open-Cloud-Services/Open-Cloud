@@ -1,4 +1,4 @@
-package app.open.software.master.command;
+package app.open.software.container.command;
 
 import app.open.software.core.command.Command;
 import app.open.software.core.command.CommandHelper;
@@ -22,6 +22,7 @@ public class LogDeleteCommand implements Command {
 			Logger.getFileHandler().deleteLogFiles();
 			return true;
 		}
+
 		return false;
 	}
 
@@ -29,7 +30,6 @@ public class LogDeleteCommand implements Command {
 	 * {@inheritDoc}
 	 */
 	public CommandHelper helper() {
-		return new CommandHelper("log").addToHepList("log delete");
+		return new CommandHelper("log").addToHepList("lod delete");
 	}
-
 }

@@ -1,3 +1,17 @@
+buildscript {
+
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.2'
+    }
+
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+
 dependencies {
     compile project(':Open-Core')
 }
@@ -7,11 +21,5 @@ jar {
         attributes 'Main-Class': 'app.open.software.master.bootstrap.MasterBootstrap'
         attributes 'Implementation-Title': project.name
         attributes 'Implementation-Version': version
-    }
-
-    from {
-        configurations.compile.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
     }
 }

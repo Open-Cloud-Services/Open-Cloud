@@ -6,6 +6,7 @@
 
 package app.open.software.core.logger.file;
 
+import app.open.software.core.logger.Logger;
 import com.google.gson.*;
 import java.io.*;
 import java.nio.file.*;
@@ -102,6 +103,7 @@ public class LogFileHandler {
 	}
 
 	public void deleteLogFiles() {
+		Logger.info("Deleting log files...");
 		Arrays.stream(new File("logs").listFiles()).forEach(file -> {
 			try {
 				Files.delete(file.toPath());
@@ -109,6 +111,7 @@ public class LogFileHandler {
 				e.printStackTrace();
 			}
 		});
+		Logger.info("Done!");
 	}
 
 	/**

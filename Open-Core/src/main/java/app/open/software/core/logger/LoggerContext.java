@@ -6,6 +6,7 @@
 
 package app.open.software.core.logger;
 
+import com.bugsnag.Bugsnag;
 import java.text.SimpleDateFormat;
 import lombok.Value;
 
@@ -33,5 +34,10 @@ public class LoggerContext {
 	 * {@link SimpleDateFormat} to format the current date in the console output log
 	 */
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
+	/**
+	 * Instance of {@link Bugsnag} to report errors
+	 */
+	private final Bugsnag bugsnag;
 
 }
