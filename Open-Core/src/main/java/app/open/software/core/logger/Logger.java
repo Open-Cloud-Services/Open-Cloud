@@ -75,6 +75,7 @@ public class Logger {
 	 * @param exception Specific {@link Exception}
 	 */
 	public static void error(final String error, final Exception exception) {
+		context.getBugsnag().notify(exception);
 		queue.offer(new ErrorComponent(error, exception));
 		checkQueue();
 	}
