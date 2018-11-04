@@ -68,7 +68,7 @@ public interface CloudApplication {
 		try {
 			Thread.sleep(time);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			Logger.error("Could not sleep as thread", e);
 		}
 	}
 

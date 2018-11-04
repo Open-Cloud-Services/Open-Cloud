@@ -47,11 +47,11 @@ public class CommandService implements Service {
 							final var command = (Command) aClass.newInstance();
 							Arrays.stream(command.getInfo().names()).forEach(name -> this.commands.put(name, command));
 						} catch (InstantiationException | IllegalAccessException e) {
-							e.printStackTrace();
+							Logger.error("Could not load command", e);
 						}
 					});
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logger.error("Could not load commands", e);
 		}
 	}
 
@@ -69,7 +69,7 @@ public class CommandService implements Service {
 					this.dispatchCommand(input);
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logger.error("Could not read from console", e);
 			}
 		}).start();
 	}
