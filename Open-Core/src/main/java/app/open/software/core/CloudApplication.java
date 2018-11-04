@@ -7,7 +7,6 @@
 package app.open.software.core;
 
 import app.open.software.core.logger.Logger;
-import com.bugsnag.Bugsnag;
 import joptsimple.OptionSet;
 
 /**
