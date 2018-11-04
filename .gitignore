@@ -7,7 +7,6 @@
 
 /out
 /build/
-gradlew.bat
 .gradle/
 
 

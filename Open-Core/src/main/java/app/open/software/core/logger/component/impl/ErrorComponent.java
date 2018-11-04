@@ -61,7 +61,7 @@ public class ErrorComponent implements LoggerComponent {
 		try {
 			Logger.getFileHandler().logError(new ErrorRecord("[" + date + "] " + this.error, this.exception));
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logger.error("Could not log error", e);
 		}
 
 		this.onFinish();

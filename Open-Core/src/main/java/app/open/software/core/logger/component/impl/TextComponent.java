@@ -59,7 +59,7 @@ public class TextComponent implements LoggerComponent {
 		try {
 			Logger.getFileHandler().log(builder.toString().replace("\r", ""));
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logger.error("Could not file log log", e);
 		}
 
 		this.onFinish();

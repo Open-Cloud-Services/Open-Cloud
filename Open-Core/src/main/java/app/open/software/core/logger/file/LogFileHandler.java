@@ -42,7 +42,7 @@ public class LogFileHandler {
 
 				Files.delete(this.latestLog);
 			} catch (ZipException | IOException e) {
-				e.printStackTrace();
+				Logger.error("Could not archive latest log", e);
 			}
 		}
 	}
@@ -97,7 +97,7 @@ public class LogFileHandler {
 			try {
 				Files.createDirectories(directory);
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logger.error("Could not create directory", e);
 			}
 		}
 	}
@@ -108,7 +108,7 @@ public class LogFileHandler {
 			try {
 				Files.delete(file.toPath());
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logger.error("Could not delete log file", e);
 			}
 		});
 		Logger.info("Done!");
@@ -124,7 +124,7 @@ public class LogFileHandler {
 			try {
 				Files.createFile(file);
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logger.error("Could not create file", e);
 			}
 		}
 	}
