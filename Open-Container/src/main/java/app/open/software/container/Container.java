@@ -7,7 +7,9 @@
 package app.open.software.container;
 
 import app.open.software.core.CloudApplication;
+import app.open.software.core.command.CommandService;
 import app.open.software.core.logger.*;
+import app.open.software.core.service.ServiceCluster;
 import java.util.HashMap;
 import joptsimple.OptionSet;
 import lombok.Getter;
@@ -45,13 +47,22 @@ public class Container implements CloudApplication {
 		if (set.has("startuptime")) {
 			Logger.info("Time to start: " + (System.currentTimeMillis() - startUpTime) + " ms");
 		}
+
+		ServiceCluster.addServices(new CommandService());
+		ServiceCluster.init();
+
+		ServiceCluster.get(CommandService.class).start();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public void shutdown() {
+		Logger.info("Starting shutdown sequence!");
 
+		ServiceCluster.get(CommandService.class).stop();
+
+		Logger.info("Stopped Open-Container");
 	}
 
 	/**
