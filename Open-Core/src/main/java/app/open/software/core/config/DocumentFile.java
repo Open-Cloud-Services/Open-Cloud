@@ -32,8 +32,8 @@ public abstract class DocumentFile {
 		}
 	}
 
-	abstract void save() throws IOException;
+	public abstract void save() throws IOException;
 
-	abstract void load() throws IOException;
+	public abstract void load() throws IOException;
 
 }

@@ -16,8 +16,9 @@ public class DocumentFileProviderService implements Service {
 		Runtime.getRuntime().addShutdownHook(new Thread(this::saveFiles));
 	}
 
-	public void addFile(final DocumentFile file) {
+	public DocumentFileProviderService addFile(final DocumentFile file) {
 		this.files.add(file);
+		return this;
 	}
 
 	private void loadFiles() {

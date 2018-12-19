@@ -8,8 +8,10 @@ package app.open.software.master;
 
 import app.open.software.core.CloudApplication;
 import app.open.software.core.command.CommandService;
+import app.open.software.core.config.DocumentFileProviderService;
 import app.open.software.core.logger.*;
 import app.open.software.core.service.ServiceCluster;
+import app.open.software.master.bootstrap.BugsnagBootstrap;
 import com.bugsnag.Bugsnag;
 import java.util.HashMap;
 import joptsimple.OptionSet;
@@ -30,18 +32,16 @@ public class Master implements CloudApplication {
 	@Getter
 	private static Master master;
 
-	@Getter
-	private final Bugsnag bugsnag = new Bugsnag("d8ac771afd1e29321b2176016a8fa951");
-
 	/**
 	 * {@inheritDoc}
 	 */
 	public void start(final OptionSet set, final long time) {
 		if(master == null) master = this;
 
-		this.initBugsnag();
+		final BugsnagBootstrap bugsnagBootstrap = new BugsnagBootstrap();
+		final Bugsnag bugsnag = bugsnagBootstrap.getBugsnag();
 
-		Logger.setContext(new LoggerContext("Open-Master", set.has("debug") ? LogLevel.DEBUG : LogLevel.INFO, this.bugsnag));
+		Logger.setContext(new LoggerContext("Open-Master", set.has("debug") ? LogLevel.DEBUG : LogLevel.INFO, bugsnag));
 
 		if (set.has("help")) {
 			this.printArgumentHelp();
@@ -50,12 +50,16 @@ public class Master implements CloudApplication {
 
 		this.printStartHeader("Open-Master");
 
+		ServiceCluster.addServices(
+				new CommandService(),
+				new DocumentFileProviderService()
+		);
+
+		ServiceCluster.init();
+
 		if (set.has("time")) {
 			Logger.info("Time to start: " + (System.currentTimeMillis() - time) + " ms");
 		}
-
-		ServiceCluster.addServices(new CommandService());
-		ServiceCluster.init();
 
 		ServiceCluster.get(CommandService.class).start();
 	}
@@ -71,19 +75,6 @@ public class Master implements CloudApplication {
 		Logger.info("Stopped Open-Master");
 
 		System.exit(0);
-	}
-
-	/**
-	 * Init instance of {@link Bugsnag} to identify reported errors
-	 */
-	private void initBugsnag() {
-		this.bugsnag.setAppVersion(this.getVersion());
-		this.bugsnag.addCallback(report -> {
-			if (this.getVersion().equals("Dev-Version")) {
-				report.cancel();
-			}
-			report.setAppInfo("Module", "Open-Master");
-		});
 	}
 
 	/**
