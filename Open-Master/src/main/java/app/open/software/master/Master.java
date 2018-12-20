@@ -73,8 +73,6 @@ public class Master implements CloudApplication {
 		ServiceCluster.stop();
 
 		Logger.info("Stopped Open-Master");
-
-		System.exit(0);
 	}
 
 	/**
