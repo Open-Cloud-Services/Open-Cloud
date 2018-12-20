@@ -70,7 +70,7 @@ public class Master implements CloudApplication {
 	public void shutdown() {
 		Logger.info("Starting shutdown sequence!");
 
-		ServiceCluster.get(CommandService.class).stop();
+		ServiceCluster.stop();
 
 		Logger.info("Stopped Open-Master");
 
