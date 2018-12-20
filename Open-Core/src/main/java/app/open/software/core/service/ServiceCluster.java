@@ -41,6 +41,13 @@ public class ServiceCluster {
 	}
 
 	/**
+	 * Stop all {@link Service}s
+	 */
+	public static void stop() {
+		serviceList.forEach(Service::stop);
+	}
+
+	/**
 	 * @return The service instance filtered by {@param type}
 	 *
 	 * @param type Class of the {@link Service}, which ist requested
