@@ -4,10 +4,9 @@
  * The code is licensed under the MIT License, which can be found in the root directory of the repository
  */
 
-package app.open.software.master.bootstrap;
+package app.open.software.core.bugsnag;
 
-import app.open.software.master.Master;
-import app.open.software.master.config.configs.BugsnagConfig;
+import app.open.software.core.bugsnag.config.BugsnagConfig;
 import com.bugsnag.Bugsnag;
 import java.io.IOException;
 import lombok.Getter;
@@ -28,9 +27,16 @@ public class BugsnagBootstrap {
 	private Bugsnag bugsnag;
 
 	/**
+	 * Version to add version information to the bugsnag reports
+	 */
+	private final String version;
+
+	/**
 	 * Bootstrapping {@link Bugsnag}
 	 */
-	public BugsnagBootstrap() {
+	public BugsnagBootstrap(final String version) {
+		this.version = version;
+
 		final String key = this.loadBugsnagKey(new BugsnagConfig());
 		this.bugsnag = new Bugsnag(key);
 		this.configureBugsnagReports(this.bugsnag);
@@ -54,9 +60,7 @@ public class BugsnagBootstrap {
 	 * Init instance of {@link Bugsnag} to identify reported errors
 	 */
 	private void configureBugsnagReports(final Bugsnag bugsnag) {
-		final String version = Master.getMaster().getVersion();
-
-		bugsnag.setAppVersion(version);
+		bugsnag.setAppVersion(this.version);
 		bugsnag.addCallback(report -> {
 			if (version.equals("Dev-Version")) {
 				report.cancel();

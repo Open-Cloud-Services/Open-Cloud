@@ -4,10 +4,9 @@
  * The code is licensed under the MIT License, which can be found in the root directory of the repository
  */
 
-package app.open.software.master.config.configs;
+package app.open.software.core.bugsnag.config;
 
 import app.open.software.core.config.DocumentFile;
-import app.open.software.master.config.BugsnagConfigEntity;
 import com.bugsnag.Bugsnag;
 import java.io.*;
 import java.nio.file.Files;

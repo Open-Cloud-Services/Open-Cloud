@@ -4,7 +4,7 @@
  * The code is licensed under the MIT License, which can be found in the root directory of the repository
  */
 
-package app.open.software.master.config;
+package app.open.software.core.bugsnag.config;
 
 import com.bugsnag.Bugsnag;
 import lombok.Getter;

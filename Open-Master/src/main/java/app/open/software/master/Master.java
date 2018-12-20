@@ -7,11 +7,11 @@
 package app.open.software.master;
 
 import app.open.software.core.CloudApplication;
+import app.open.software.core.bugsnag.BugsnagBootstrap;
 import app.open.software.core.command.CommandService;
 import app.open.software.core.config.DocumentFileProviderService;
 import app.open.software.core.logger.*;
 import app.open.software.core.service.ServiceCluster;
-import app.open.software.master.bootstrap.BugsnagBootstrap;
 import com.bugsnag.Bugsnag;
 import java.util.HashMap;
 import joptsimple.OptionSet;
@@ -38,7 +38,7 @@ public class Master implements CloudApplication {
 	public void start(final OptionSet set, final long time) {
 		if(master == null) master = this;
 
-		final BugsnagBootstrap bugsnagBootstrap = new BugsnagBootstrap();
+		final BugsnagBootstrap bugsnagBootstrap = new BugsnagBootstrap(this.getVersion());
 		final Bugsnag bugsnag = bugsnagBootstrap.getBugsnag();
 
 		Logger.setContext(new LoggerContext("Open-Master", set.has("debug") ? LogLevel.DEBUG : LogLevel.INFO, bugsnag));
