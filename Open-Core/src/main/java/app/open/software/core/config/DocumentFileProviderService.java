@@ -12,21 +12,44 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * {@link Service} to handle the config files
+ *
+ * @author Tammo0987
+ * @version 1.0
+ * @since 0.2
+ */
 public class DocumentFileProviderService implements Service {
 
+	/**
+	 * {@link List} of all {@link DocumentFile}s
+	 */
 	private final List<DocumentFile> files = new ArrayList<>();
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void init() {
 		this.loadFiles();
 
 		Runtime.getRuntime().addShutdownHook(new Thread(this::saveFiles));
 	}
 
+	/**
+	 * Add {@link DocumentFile} to handle it with the {@link Service}
+	 *
+	 * @param file {@link DocumentFile} to add
+	 *
+	 * @return instance
+	 */
 	public DocumentFileProviderService addFile(final DocumentFile file) {
 		this.files.add(file);
 		return this;
 	}
 
+	/**
+	 * Load all files
+	 */
 	private void loadFiles() {
 		this.files.forEach(file -> {
 			try {
@@ -37,6 +60,9 @@ public class DocumentFileProviderService implements Service {
 		});
 	}
 
+	/**
+	 * Save all files
+	 */
 	private void saveFiles() {
 		this.files.forEach(file -> {
 			try {

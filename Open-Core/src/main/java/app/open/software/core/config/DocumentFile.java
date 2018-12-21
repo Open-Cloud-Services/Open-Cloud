@@ -12,12 +12,30 @@ import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.nio.file.*;
 
+/**
+ * Represents a config file
+ *
+ * @author Tammo0987
+ * @version 1.0
+ * @since 0.2
+ */
 public abstract class DocumentFile {
 
+	/**
+	 * {@link Gson} constant to serialize and deserialize with json
+	 */
 	protected static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
+	/**
+	 * {@link Path} of this {@link DocumentFile}
+	 */
 	protected final Path path;
 
+	/**
+	 * Create a new {@link DocumentFile}
+	 *
+	 * @param name Name of the file
+	 */
 	public DocumentFile(final String name) {
 		this.path = Paths.get("config/" + name + ".json");
 
@@ -38,8 +56,18 @@ public abstract class DocumentFile {
 		}
 	}
 
+	/**
+	 * Save the file
+	 *
+	 * @throws IOException An I/O error occurs
+	 */
 	public abstract void save() throws IOException;
 
+	/**
+	 * Load the file
+	 *
+	 * @throws IOException An I/O error occurs
+	 */
 	public abstract void load() throws IOException;
 
 }
