@@ -32,7 +32,7 @@ public class BugsnagBootstrap {
 	private final String module;
 
 	/**
-	 * Cersion information for bugsnag reports
+	 * Version information for bugsnag reports
 	 */
 	private final String version;
 
