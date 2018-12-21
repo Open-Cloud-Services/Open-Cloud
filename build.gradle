@@ -50,5 +50,5 @@ task createReleaseZip(type: Zip, dependsOn: ['Open-Container:shadowJar', 'Open-M
     }
 
     archiveName 'Open-Cloud-Release-' + this.version.toString() + ".zip"
-    this.destinationDir = file("${this.buildDir}/zip")
+    destinationDir = file("${this.buildDir}/zip")
 }
