@@ -149,11 +149,7 @@ public class LogFileHandler {
 		final var millis = Files.getLastModifiedTime(this.latestLog);
 		final var date = Instant.ofEpochMilli(millis.toMillis()).atZone(ZoneId.systemDefault()).toLocalDateTime();
 
-		final var builder = new StringBuilder("logs/");
-		builder.append(DateTimeFormatter.ofPattern("yyyy-MM-dd--HH-mm").format(date));
-		builder.append(".log.zip");
-
-		return builder.toString();
+		return "logs/" + DateTimeFormatter.ofPattern("yyyy-MM-dd--HH-mm").format(date) + ".log.zip";
 	}
 
 	/**

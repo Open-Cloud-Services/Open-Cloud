@@ -55,7 +55,7 @@ public class ErrorComponent implements LoggerComponent {
 		System.out.print("\r> ");
 
 		try {
-			Logger.getFileHandler().logError(new ErrorRecord("[" + this.getCurrentDate(this.context) + "] " + this.error, this.exception));
+			Logger.getFileHandler().logError(new ErrorRecord("[" + this.getCurrentDate() + "] " + this.error, this.exception));
 		} catch (IOException e) {
 			Logger.error("Could not log error", e);
 		}

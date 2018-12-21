@@ -31,11 +31,6 @@ public class LoggerContext {
 	private final LogLevel level;
 
 	/**
-	 * {@link SimpleDateFormat} to format the current date in the console output log
-	 */
-	private final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
-	/**
 	 * Instance of {@link Bugsnag} to report errors
 	 */
 	private final Bugsnag bugsnag;
