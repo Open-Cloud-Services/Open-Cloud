@@ -27,8 +27,8 @@ subprojects {
         compileOnly 'org.projectlombok:lombok:1.18.2'
     }
 
-    sourceCompatibility = 11
-    targetCompatibility = 11
+    this.sourceCompatibility = 11
+    this.targetCompatibility = 11
 
     compileJava.options.encoding 'UTF-8'
 }
@@ -50,5 +50,5 @@ task createReleaseZip(type: Zip, dependsOn: ['Open-Container:shadowJar', 'Open-M
     }
 
     archiveName 'Open-Cloud-Release-' + this.version.toString() + ".zip"
-    destinationDir = file("${buildDir}/zip")
+    this.destinationDir = file("${this.buildDir}/zip")
 }
