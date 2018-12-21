@@ -72,6 +72,7 @@ public class BugsnagBootstrap {
 				report.cancel();
 			}
 			report.setAppInfo("Module", this.module);
+			report.setDeviceInfo("OS", System.getProperty("os.name"));
 		});
 	}
 
