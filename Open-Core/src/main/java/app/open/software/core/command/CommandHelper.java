@@ -45,15 +45,6 @@ public class CommandHelper {
 	}
 
 	/**
-	 * Add sub commands to the list
-	 *
-	 * @param help Array of the sub commmands
-	 */
-	public void addToHelpList(final String... help) {
-		this.helpList.addAll(Arrays.asList(help));
-	}
-
-	/**
 	 * Print the help in the console
 	 */
 	protected void printHelp() {
