@@ -36,6 +36,6 @@ public class LogDeleteCommand implements Command {
 	 * {@inheritDoc}
 	 */
 	public CommandHelper helper() {
-		return new CommandHelper("log").addToHepList("lod delete");
+		return new CommandHelper("log").addToHepList("log delete");
 	}
 }
