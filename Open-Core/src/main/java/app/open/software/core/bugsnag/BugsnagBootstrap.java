@@ -51,7 +51,7 @@ public class BugsnagBootstrap {
 		try {
 			bugsnagConfig.load();
 		} catch (IOException e) {
-			e.printStackTrace();
+			 e.printStackTrace();
 		}
 		return bugsnagConfig.getEntity().getBugsnagKey();
 	}
@@ -62,7 +62,7 @@ public class BugsnagBootstrap {
 	private void configureBugsnagReports(final Bugsnag bugsnag) {
 		bugsnag.setAppVersion(this.version);
 		bugsnag.addCallback(report -> {
-			if (version.equals("Dev-Version")) {
+			if (this.version.equals("Dev-Version")) {
 				report.cancel();
 			}
 			report.setAppInfo("Module", "Open-Master");

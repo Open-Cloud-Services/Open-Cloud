@@ -42,7 +42,7 @@ public class DocumentFileProviderService implements Service {
 			try {
 				file.save();
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logger.error("Could not save file", e);
 			}
 		});
 	}
