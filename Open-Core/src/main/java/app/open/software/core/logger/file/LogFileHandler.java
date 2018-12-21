@@ -14,8 +14,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
@@ -104,7 +103,7 @@ public class LogFileHandler {
 
 	public void deleteLogFiles() {
 		Logger.info("Deleting log files...");
-		Arrays.stream(new File("logs").listFiles()).forEach(file -> {
+		Arrays.stream(Objects.requireNonNull(new File("logs").listFiles())).forEach(file -> {
 			try {
 				Files.delete(file.toPath());
 			} catch (IOException e) {
