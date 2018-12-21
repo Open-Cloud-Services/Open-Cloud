@@ -11,6 +11,7 @@ import app.open.software.core.service.Service;
 import app.open.software.core.thread.ThreadBuilder;
 import com.google.common.reflect.ClassPath;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -44,9 +45,9 @@ public class CommandService implements Service {
 					.filter(aClass -> aClass.isAnnotationPresent(Command.Info.class))
 					.forEach(aClass -> {
 						try {
-							final var command = (Command) aClass.newInstance();
+							final var command = (Command) aClass.getDeclaredConstructor().newInstance();
 							Arrays.stream(command.getInfo().names()).forEach(name -> this.commands.put(name, command));
-						} catch (InstantiationException | IllegalAccessException e) {
+						} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 							Logger.error("Could not load command", e);
 						}
 					});
