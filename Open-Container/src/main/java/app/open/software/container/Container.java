@@ -37,7 +37,7 @@ public class Container implements CloudApplication {
 	public void start(final OptionSet set, final long time) {
 		if(container == null) container = this;
 
-		final BugsnagBootstrap bugsnagBootstrap = new BugsnagBootstrap(this.getVersion());
+		final BugsnagBootstrap bugsnagBootstrap = new BugsnagBootstrap("Open-Container", this.getVersion());
 		final Bugsnag bugsnag = bugsnagBootstrap.getBugsnag();
 
 		Logger.setContext(new LoggerContext("Open-Container", set.has("debug") ? LogLevel.DEBUG : LogLevel.INFO, bugsnag));

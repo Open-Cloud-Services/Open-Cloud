@@ -27,14 +27,20 @@ public class BugsnagBootstrap {
 	private Bugsnag bugsnag;
 
 	/**
-	 * Version to add version information to the bugsnag reports
+	 * Module information for bugsnag reports
+	 */
+	private final String module;
+
+	/**
+	 * Cersion information for bugsnag reports
 	 */
 	private final String version;
 
 	/**
 	 * Bootstrapping {@link Bugsnag}
 	 */
-	public BugsnagBootstrap(final String version) {
+	public BugsnagBootstrap(final String module, final String version) {
+		this.module = module;
 		this.version = version;
 
 		final String key = this.loadBugsnagKey(new BugsnagConfig());
@@ -65,7 +71,7 @@ public class BugsnagBootstrap {
 			if (this.version.equals("Dev-Version")) {
 				report.cancel();
 			}
-			report.setAppInfo("Module", "Open-Master");
+			report.setAppInfo("Module", this.module);
 		});
 	}
 

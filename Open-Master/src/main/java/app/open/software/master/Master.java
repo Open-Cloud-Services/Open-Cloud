@@ -38,7 +38,7 @@ public class Master implements CloudApplication {
 	public void start(final OptionSet set, final long time) {
 		if(master == null) master = this;
 
-		final BugsnagBootstrap bugsnagBootstrap = new BugsnagBootstrap(this.getVersion());
+		final BugsnagBootstrap bugsnagBootstrap = new BugsnagBootstrap("Open-Master", this.getVersion());
 		final Bugsnag bugsnag = bugsnagBootstrap.getBugsnag();
 
 		Logger.setContext(new LoggerContext("Open-Master", set.has("debug") ? LogLevel.DEBUG : LogLevel.INFO, bugsnag));
