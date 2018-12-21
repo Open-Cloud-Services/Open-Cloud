@@ -7,7 +7,6 @@
 package app.open.software.container.bootstrap;
 
 import app.open.software.container.Container;
-import app.open.software.core.exception.JavaVersionRequiredException;
 import joptsimple.OptionParser;
 
 /**
@@ -23,15 +22,9 @@ public class ContainerBootstrap {
 	 * Main method to start the Open-Container module
 	 *
 	 * @param args Console arguments
-	 *
-	 * @throws JavaVersionRequiredException Required Java version is not installed
 	 */
-	public static void main(final String[] args) throws JavaVersionRequiredException {
-		if (Double.parseDouble(System.getProperty("java.class.version")) < 55) {
-			throw new JavaVersionRequiredException();
-		} else {
-			new ContainerBootstrap(args);
-		}
+	public static void main(final String[] args) {
+		new ContainerBootstrap(args);
 	}
 
 	/**
