@@ -7,7 +7,6 @@
 package app.open.software.core.logger;
 
 import com.bugsnag.Bugsnag;
-import java.text.SimpleDateFormat;
 import lombok.Value;
 
 /**
