@@ -41,12 +41,9 @@ public class ProgressBarComponent implements LoggerComponent {
 	 */
 	public void print() {
 		final var percent = this.getPercent();
-		final var date = this.context.getDateFormat().format(new Date());
 
-		final var builder = new StringBuilder("\r[");
+		final var builder = this.createDefaultStringBuilder(this.context);
 
-		builder.append(date).append("] ");
-		builder.append(this.context.getPrefix()).append(" [");
 		builder.append(LogLevel.INFO.getName()).append("] ");
 		builder.append(this.createProgress());
 

@@ -42,12 +42,8 @@ public class ErrorComponent implements LoggerComponent {
 	 * {@inheritDoc}
 	 */
 	public void print() {
-		final var date = this.context.getDateFormat().format(new Date());
+		final var builder = this.createDefaultStringBuilder(this.context);
 
-		final var builder = new StringBuilder("\r[");
-
-		builder.append(date).append("] ");
-		builder.append(this.context.getPrefix()).append(" [");
 		builder.append(LogLevel.ERROR.getName()).append("] ");
 
 		builder.append(this.error);
@@ -59,7 +55,7 @@ public class ErrorComponent implements LoggerComponent {
 		System.out.print("\r> ");
 
 		try {
-			Logger.getFileHandler().logError(new ErrorRecord("[" + date + "] " + this.error, this.exception));
+			Logger.getFileHandler().logError(new ErrorRecord("[" + this.getCurrentDate(this.context) + "] " + this.error, this.exception));
 		} catch (IOException e) {
 			Logger.error("Could not log error", e);
 		}
