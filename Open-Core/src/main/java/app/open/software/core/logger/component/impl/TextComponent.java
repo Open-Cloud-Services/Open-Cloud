@@ -42,12 +42,8 @@ public class TextComponent implements LoggerComponent {
 			return;
 		}
 
-		final var date = this.context.getDateFormat().format(new Date());
+		final var builder = this.createDefaultStringBuilder(this.context);
 
-		final var builder = new StringBuilder("\r[");
-
-		builder.append(date).append("] ");
-		builder.append(this.context.getPrefix()).append(" [");
 		builder.append(this.level.getName()).append("] ");
 
 		builder.append(this.log);

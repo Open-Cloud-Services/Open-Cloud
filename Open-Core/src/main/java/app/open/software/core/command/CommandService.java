@@ -11,13 +11,15 @@ import app.open.software.core.service.Service;
 import app.open.software.core.thread.ThreadBuilder;
 import com.google.common.reflect.ClassPath;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import lombok.Getter;
 
 /**
  * {@link Service} to handle all the {@link Command}s
  *
  * @author Tammo0987, x7Airworker
- * @version 1.0
+ * @version 1.1
  * @since 0.1
  */
 public class CommandService implements Service {
@@ -25,6 +27,7 @@ public class CommandService implements Service {
 	/**
 	 * {@link Map} to hold all the {@link Command} with the name or alias as the key
 	 */
+	@Getter
 	private final Map<String, Command> commands = new HashMap<>();
 
 	/**
@@ -44,21 +47,23 @@ public class CommandService implements Service {
 					.filter(aClass -> aClass.isAnnotationPresent(Command.Info.class))
 					.forEach(aClass -> {
 						try {
-							final var command = (Command) aClass.newInstance();
+							final var command = (Command) aClass.getDeclaredConstructor().newInstance();
 							Arrays.stream(command.getInfo().names()).forEach(name -> this.commands.put(name, command));
-						} catch (InstantiationException | IllegalAccessException e) {
+						} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 							Logger.error("Could not load command", e);
 						}
 					});
 		} catch (IOException e) {
 			Logger.error("Could not load commands", e);
 		}
+
+		this.start();
 	}
 
 	/**
 	 * Start the Command-Dispatcher {@link Thread}
 	 */
-	public void start() {
+	private void start() {
 		this.running = true;
 
 		new ThreadBuilder("Command-Dispatcher", () -> {

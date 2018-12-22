@@ -25,7 +25,8 @@ Open-Cloud becomes a friendly API for developers, to customize the cloud system.
 
 ### Open-Source
 
-This project is open source to give everyone the opportunity to make feature suggestions and to implement most of the suggested or own features. In case you want to change something or if you have a suggestion to make, feel free to fork this repository and create a Pull-Request.
+This project is open source to give everyone the opportunity to make feature suggestions and to implement most of 
+the suggested or own features. In case you want to change something or if you have a suggestion to make, feel free to fork this repository and create a Pull-Request.
 
 ### Requirements
 

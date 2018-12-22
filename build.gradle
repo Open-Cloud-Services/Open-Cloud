@@ -1,4 +1,10 @@
-version '0.1'
+/*
+ * Copyright (c) 2018, Open-Software and contributors
+ *
+ * The code is licensed under the MIT License, which can be found in the root directory of the repository
+ */
+
+version '0.2'
 
 apply plugin: 'java'
 
@@ -18,11 +24,12 @@ subprojects {
         testCompile 'junit:junit:4.12'
         testCompile 'org.mockito:mockito-all:1.10.19'
 
-        compileOnly 'org.projectlombok:lombok:1.18.2'
+        annotationProcessor 'org.projectlombok:lombok:1.18.2'
+        implementation 'org.projectlombok:lombok:1.18.2'
     }
 
-    sourceCompatibility = 11
-    targetCompatibility = 11
+    this.sourceCompatibility = 11
+    this.targetCompatibility = 11
 
     compileJava.options.encoding 'UTF-8'
 }
@@ -44,5 +51,5 @@ task createReleaseZip(type: Zip, dependsOn: ['Open-Container:shadowJar', 'Open-M
     }
 
     archiveName 'Open-Cloud-Release-' + this.version.toString() + ".zip"
-    destinationDir = file("${buildDir}/zip")
+    destinationDir = file("${this.buildDir}/zip")
 }

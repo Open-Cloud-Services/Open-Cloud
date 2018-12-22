@@ -7,7 +7,9 @@
 package app.open.software.master;
 
 import app.open.software.core.CloudApplication;
+import app.open.software.core.bugsnag.BugsnagBootstrap;
 import app.open.software.core.command.CommandService;
+import app.open.software.core.config.DocumentFileProviderService;
 import app.open.software.core.logger.*;
 import app.open.software.core.service.ServiceCluster;
 import com.bugsnag.Bugsnag;
@@ -30,34 +32,32 @@ public class Master implements CloudApplication {
 	@Getter
 	private static Master master;
 
-	@Getter
-	private final Bugsnag bugsnag = new Bugsnag("d8ac771afd1e29321b2176016a8fa951");
-
 	/**
 	 * {@inheritDoc}
 	 */
-	public void start(final OptionSet set, final long time) {
+	public void start(final OptionSet optionSet, final long time) {
 		if(master == null) master = this;
 
-		this.initBugsnag();
+		final BugsnagBootstrap bugsnagBootstrap = new BugsnagBootstrap("Open-Master", this.getVersion());
+		final Bugsnag bugsnag = bugsnagBootstrap.getBugsnag();
 
-		Logger.setContext(new LoggerContext("Open-Master", set.has("debug") ? LogLevel.DEBUG : LogLevel.INFO, this.bugsnag));
+		Logger.setContext(new LoggerContext("Open-Master", optionSet.has("debug") ? LogLevel.DEBUG : LogLevel.INFO, bugsnag));
 
-		if (set.has("help")) {
-			this.printArgumentHelp();
+		if (this.handleParameters(optionSet)) {
 			return;
 		}
 
 		this.printStartHeader("Open-Master");
 
-		if (set.has("time")) {
-			Logger.info("Time to start: " + (System.currentTimeMillis() - time) + " ms");
-		}
-
-		ServiceCluster.addServices(new CommandService());
+		ServiceCluster.addServices(
+				new CommandService(),
+				new DocumentFileProviderService()
+		);
 		ServiceCluster.init();
 
-		ServiceCluster.get(CommandService.class).start();
+		if (optionSet.has("time")) {
+			Logger.info("Time to start: " + (System.currentTimeMillis() - time) + " ms");
+		}
 	}
 
 	/**
@@ -66,40 +66,18 @@ public class Master implements CloudApplication {
 	public void shutdown() {
 		Logger.info("Starting shutdown sequence!");
 
-		ServiceCluster.get(CommandService.class).stop();
+		ServiceCluster.stop();
 
 		Logger.info("Stopped Open-Master");
-
-		System.exit(0);
 	}
 
 	/**
-	 * Init instance of {@link Bugsnag} to identify reported errors
+	 * Add specific module parameter help
+	 *
+	 * @param hashMap Map of all parameters with description
 	 */
-	private void initBugsnag() {
-		this.bugsnag.setAppVersion(this.getVersion());
-		this.bugsnag.addCallback(report -> {
-			if (this.getVersion().equals("Dev-Version")) {
-				report.cancel();
-			}
-			report.setAppInfo("Module", "Open-Master");
-		});
-	}
+	public void addParameterHelp(final HashMap hashMap) {
 
-	/**
-	 * Print the help for the program arguments if requested
-	 */
-	private void printArgumentHelp() {
-		final var map = new HashMap<String, String>();
-		map.put("help", "Print all possible runtime arguments");
-		map.put("version", "Print the current version of Open-Cloud");
-		map.put("debug", "Enable debug logging");
-		map.put("time", "Show after starting the time to start");
-
-		Logger.info("Open-Cloud Help:");
-		Logger.info("");
-		map.forEach((name, description) -> Logger.info(name + " -> " + description));
-		Logger.info("");
 	}
 
 }

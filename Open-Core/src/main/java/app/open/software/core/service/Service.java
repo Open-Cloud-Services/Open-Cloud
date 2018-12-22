@@ -20,4 +20,9 @@ public interface Service {
 	 */
 	default void init() {}
 
+	/**
+	 * Optional stop method to stop the {@link Service}
+	 */
+	default void stop() {}
+
 }

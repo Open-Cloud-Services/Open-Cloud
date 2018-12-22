@@ -6,7 +6,6 @@
 
 package app.open.software.master.bootstrap;
 
-import app.open.software.core.exception.JavaVersionRequiredException;
 import app.open.software.master.Master;
 import joptsimple.OptionParser;
 
@@ -23,15 +22,9 @@ public class MasterBootstrap {
 	 * Main method to start the Open-Master module
 	 *
 	 * @param args Console arguments
-	 *
-	 * @throws JavaVersionRequiredException Required Java version is not installed
 	 */
-	public static void main(final String[] args) throws JavaVersionRequiredException {
-		if (Double.parseDouble(System.getProperty("java.class.version")) < 55) {
-			throw new JavaVersionRequiredException();
-		} else {
-			new MasterBootstrap(args);
-		}
+	public static void main(final String[] args) {
+		new MasterBootstrap(args);
 	}
 
 	/**
@@ -44,7 +37,7 @@ public class MasterBootstrap {
 
 		final var parser = new OptionParser();
 		parser.allowsUnrecognizedOptions();
-		this.acceptArguments(parser);
+		this.setAcceptedArguments(parser);
 
 		final var set = parser.parse(args);
 
@@ -56,7 +49,7 @@ public class MasterBootstrap {
 	 *
 	 * @param parser {@link OptionParser} for accepting
 	 */
-	private void acceptArguments(final OptionParser parser) {
+	private void setAcceptedArguments(final OptionParser parser) {
 		parser.accepts("help");
 		parser.accepts("version");
 		parser.accepts("debug");

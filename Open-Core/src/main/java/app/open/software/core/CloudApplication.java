@@ -7,13 +7,14 @@
 package app.open.software.core;
 
 import app.open.software.core.logger.Logger;
+import java.util.HashMap;
 import joptsimple.OptionSet;
 
 /**
  * Interface to implement to the main class of the application
  *
  * @author Tammo0987
- * @version 1.0
+ * @version 1.1
  * @since 0.1
  */
 public interface CloudApplication {
@@ -21,15 +22,60 @@ public interface CloudApplication {
 	/**
 	 * Starts the {@link CloudApplication}
 	 *
-	 * @param set {@link OptionSet} of the console arguments
+	 * @param optionSet {@link OptionSet} of the console arguments
 	 * @param time Time in ms, when the application was started
 	 */
-	void start(final OptionSet set, final long time);
+	void start(final OptionSet optionSet, final long time);
 
 	/**
 	 * Stops the {@link CloudApplication}
 	 */
 	void shutdown();
+
+	/**
+	 * Handle the program parameters
+	 *
+	 * @param optionSet {@link OptionSet} of current parameters
+	 */
+	 default boolean handleParameters(final OptionSet optionSet) {
+		 if (optionSet.has("version")) {
+			 Logger.info("Current version: " + this.getVersion());
+			 return true;
+		 }
+
+		 if (optionSet.has("help")) {
+			 this.printParametersHelp();
+			 return true;
+		 }
+
+		 return false;
+	 }
+
+	/**
+	 * Print the help for the program arguments if requested
+	 */
+	default void printParametersHelp() {
+		final var map = new HashMap<String, String>();
+
+		map.put("help", "Print all possible runtime arguments");
+		map.put("version", "Print the current version of Open-Cloud");
+		map.put("debug", "Enable debug logging");
+		map.put("time", "Show after starting the time to start");
+
+		this.addParameterHelp(map);
+
+		Logger.info("<-- Open-Cloud Help -->");
+		Logger.info("");
+		map.forEach((name, description) -> Logger.info(name + " -> " + description));
+		Logger.info("");
+	}
+
+	/**
+	 * Add specific module parameter help
+	 *
+	 * @param hashMap Map of all parameters with description
+	 */
+	void addParameterHelp(final HashMap hashMap);
 
 	/**
 	 * Prints the header at startup to show information about the running application

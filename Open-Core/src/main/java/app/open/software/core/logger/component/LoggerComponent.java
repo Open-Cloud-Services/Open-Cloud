@@ -7,6 +7,9 @@
 package app.open.software.core.logger.component;
 
 import app.open.software.core.logger.Logger;
+import app.open.software.core.logger.LoggerContext;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Interface to implement several type of console and logging output
@@ -27,6 +30,27 @@ public interface LoggerComponent {
 	 */
 	default void onFinish() {
 		Logger.checkQueue();
+	}
+
+	/**
+	 * @param context {@link LoggerContext} to get further information
+	 *
+	 * @return Created {@link StringBuilder}
+	 */
+	default StringBuilder createDefaultStringBuilder(final LoggerContext context) {
+		final var builder = new StringBuilder("\r[");
+
+		builder.append(this.getCurrentDate()).append("] ");
+		builder.append(context.getPrefix()).append(" [");
+
+		return builder;
+	}
+
+	/**
+	 * @return Current date as string
+	 */
+	default String getCurrentDate() {
+		return DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
 	}
 
 }
