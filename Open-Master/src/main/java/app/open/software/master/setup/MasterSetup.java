@@ -43,7 +43,7 @@ public class MasterSetup implements Setup {
 				final ProxyVersion install = ProxyVersion.valueOf(version.toUpperCase());
 				try {
 					Logger.info(install.getUrl());
-					new DownloadRequest().request(install.getUrl(), proxyJar.getPath(), () -> Logger.info("Download complete1"));
+					new DownloadRequest().request(install.getUrl(), proxyJar.getPath(), () -> Logger.info("Download complete!"));
 				} catch (IOException e) {
 					Logger.error("Download of proxy software failed!", e);
 				}
