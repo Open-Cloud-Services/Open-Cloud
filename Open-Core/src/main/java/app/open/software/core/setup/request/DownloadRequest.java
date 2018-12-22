@@ -4,12 +4,12 @@
  * The code is licensed under the MIT License, which can be found in the root directory of the repository
  */
 
-package app.open.software.core.setup;
+package app.open.software.core.setup.request;
 
 import app.open.software.core.exception.FileDownloadException;
 import app.open.software.core.logger.Logger;
 import app.open.software.core.logger.component.impl.ProgressBarComponent;
-import app.open.software.core.setup.util.ReadableByteChannelWrapper;
+import app.open.software.core.setup.request.util.ReadableByteChannelWrapper;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;

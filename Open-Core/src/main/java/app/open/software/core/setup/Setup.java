@@ -7,26 +7,24 @@
 package app.open.software.core.setup;
 
 import java.io.BufferedReader;
-import lombok.RequiredArgsConstructor;
+import java.io.IOException;
 
 /**
- * Request class for different types of requests for the setup
+ * Interface which can be implemented for setups
  *
  * @author Tammo0987
  * @version 1.0
  * @since 0.3
  */
-@RequiredArgsConstructor
-public abstract class Request {
+public interface Setup {
 
 	/**
-	 * Requested question
+	 * Setup the current module
+	 *
+	 * @param reader {@link BufferedReader} to read user input
+	 *
+	 * @throws IOException An I/O error occurred
 	 */
-	protected final String request;
-
-	/**
-	 * {@link BufferedReader} to read the user input
-	 */
-	protected final BufferedReader reader;
+	void setup(final BufferedReader reader) throws IOException;
 
 }

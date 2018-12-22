@@ -4,7 +4,7 @@
  * The code is licensed under the MIT License, which can be found in the root directory of the repository
  */
 
-package app.open.software.core.setup.util;
+package app.open.software.core.setup.request.util;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

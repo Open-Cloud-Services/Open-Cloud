@@ -4,10 +4,10 @@
  * The code is licensed under the MIT License, which can be found in the root directory of the repository
  */
 
-package app.open.software.core.setup.impl;
+package app.open.software.core.setup.request.impl;
 
 import app.open.software.core.logger.Logger;
-import app.open.software.core.setup.Request;
+import app.open.software.core.setup.request.Request;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.function.Consumer;
