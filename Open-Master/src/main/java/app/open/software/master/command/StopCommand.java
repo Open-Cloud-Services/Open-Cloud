@@ -14,7 +14,7 @@ import app.open.software.master.Master;
  * Implementation of the {@link Command} interface to stop the Open-Master
  *
  * @author Tammo0987
- * @version 1.0
+ * @version 1.1
  * @since 0.1
  */
 @Command.Info(names = {"stop", "shutdown", "exit"}, description = "Stops the Open-Master")
@@ -32,7 +32,7 @@ public class StopCommand implements Command {
 	 * {@inheritDoc}
 	 */
 	public CommandHelper helper() {
-		return new CommandHelper("stop");
+		return new CommandHelper(this.getInfo());
 	}
 
 }

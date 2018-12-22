@@ -14,7 +14,7 @@ import joptsimple.OptionSet;
  * Interface to implement to the main class of the application
  *
  * @author Tammo0987
- * @version 1.0
+ * @version 1.1
  * @since 0.1
  */
 public interface CloudApplication {
@@ -64,7 +64,7 @@ public interface CloudApplication {
 
 		this.addParameterHelp(map);
 
-		Logger.info("Open-Cloud Help:");
+		Logger.info("<-- Open-Cloud Help -->");
 		Logger.info("");
 		map.forEach((name, description) -> Logger.info(name + " -> " + description));
 		Logger.info("");

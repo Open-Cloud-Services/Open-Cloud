@@ -8,24 +8,22 @@ package app.open.software.core.command;
 
 import app.open.software.core.logger.Logger;
 import java.util.*;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
  * Helper class to print the syntax of the {@link Command}s
  *
  * @author Tammo0987
- * @version 1.0
+ * @version 1.1
  * @since 0.1
  */
 @RequiredArgsConstructor
 public class CommandHelper {
 
 	/**
-	 * {@link Command} main name
+	 * {@link Command.Info} with information about the command
 	 */
-	@Getter
-	private final String command;
+	private final Command.Info commandInfo;
 
 	/**
 	 * List of sub commands
@@ -47,9 +45,9 @@ public class CommandHelper {
 	/**
 	 * Print the help in the console
 	 */
-	protected void printHelp() {
+	public void printHelp() {
 		Logger.info("<-- Command Help -->");
-		Logger.info(this.command);
+		Logger.info(this.commandInfo.names()[0] + " -> " + this.commandInfo.description());
 		this.helpList.forEach(Logger::info);
 		Logger.info("");
 	}

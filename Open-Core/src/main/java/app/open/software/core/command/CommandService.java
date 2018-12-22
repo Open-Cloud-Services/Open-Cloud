@@ -13,12 +13,13 @@ import com.google.common.reflect.ClassPath;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import lombok.Getter;
 
 /**
  * {@link Service} to handle all the {@link Command}s
  *
  * @author Tammo0987, x7Airworker
- * @version 1.0
+ * @version 1.1
  * @since 0.1
  */
 public class CommandService implements Service {
@@ -26,6 +27,7 @@ public class CommandService implements Service {
 	/**
 	 * {@link Map} to hold all the {@link Command} with the name or alias as the key
 	 */
+	@Getter
 	private final Map<String, Command> commands = new HashMap<>();
 
 	/**
