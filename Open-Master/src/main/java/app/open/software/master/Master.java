@@ -54,14 +54,11 @@ public class Master implements CloudApplication {
 				new CommandService(),
 				new DocumentFileProviderService()
 		);
-
 		ServiceCluster.init();
 
 		if (set.has("time")) {
 			Logger.info("Time to start: " + (System.currentTimeMillis() - time) + " ms");
 		}
-
-		ServiceCluster.get(CommandService.class).start();
 	}
 
 	/**

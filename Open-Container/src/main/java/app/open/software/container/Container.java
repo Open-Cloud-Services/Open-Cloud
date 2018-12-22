@@ -49,14 +49,12 @@ public class Container implements CloudApplication {
 
 		this.printStartHeader("Open-Container");
 
-		if (set.has("time")) {
-			Logger.info("Time to start: " + (System.currentTimeMillis() - time) + " ms");
-		}
-
 		ServiceCluster.addServices(new CommandService());
 		ServiceCluster.init();
 
-		ServiceCluster.get(CommandService.class).start();
+		if (set.has("time")) {
+			Logger.info("Time to start: " + (System.currentTimeMillis() - time) + " ms");
+		}
 	}
 
 	/**
