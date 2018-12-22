@@ -47,6 +47,7 @@ public class CommandHelper {
 	 */
 	public void printHelp() {
 		Logger.info("<-- Command Help -->");
+		Logger.info("");
 		Logger.info(this.commandInfo.names()[0] + " -> " + this.commandInfo.description());
 		this.helpList.forEach(Logger::info);
 		Logger.info("");
