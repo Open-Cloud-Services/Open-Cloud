@@ -65,7 +65,7 @@ public class Container implements CloudApplication {
 	public void shutdown() {
 		Logger.info("Starting shutdown sequence!");
 
-		ServiceCluster.get(CommandService.class).stop();
+		ServiceCluster.stop();
 
 		Logger.info("Stopped Open-Container");
 	}
