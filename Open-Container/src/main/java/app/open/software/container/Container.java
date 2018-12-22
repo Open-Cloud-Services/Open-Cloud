@@ -34,16 +34,15 @@ public class Container implements CloudApplication {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void start(final OptionSet set, final long time) {
+	public void start(final OptionSet optionSet, final long time) {
 		if(container == null) container = this;
 
 		final BugsnagBootstrap bugsnagBootstrap = new BugsnagBootstrap("Open-Container", this.getVersion());
 		final Bugsnag bugsnag = bugsnagBootstrap.getBugsnag();
 
-		Logger.setContext(new LoggerContext("Open-Container", set.has("debug") ? LogLevel.DEBUG : LogLevel.INFO, bugsnag));
+		Logger.setContext(new LoggerContext("Open-Container", optionSet.has("debug") ? LogLevel.DEBUG : LogLevel.INFO, bugsnag));
 
-		if (set.has("help")) {
-			this.printArgumentHelp();
+		if (this.handleParameters(optionSet)) {
 			return;
 		}
 
@@ -52,7 +51,7 @@ public class Container implements CloudApplication {
 		ServiceCluster.addServices(new CommandService());
 		ServiceCluster.init();
 
-		if (set.has("time")) {
+		if (optionSet.has("time")) {
 			Logger.info("Time to start: " + (System.currentTimeMillis() - time) + " ms");
 		}
 	}
@@ -69,19 +68,12 @@ public class Container implements CloudApplication {
 	}
 
 	/**
-	 * Print the help for the program arguments if requested
+	 * Add specific module parameter help
+	 *
+	 * @param hashMap Map of all parameters with description
 	 */
-	private void printArgumentHelp() {
-		final var map = new HashMap<String, String>();
-		map.put("help", "Print all possible runtime arguments");
-		map.put("version", "Print the current version of Open-Cloud");
-		map.put("debug", "Enable debug logging");
-		map.put("time", "Show after starting the time to start");
+	public void addParameterHelp(final HashMap hashMap) {
 
-		Logger.info("Open-Cloud Help:");
-		Logger.info("");
-		map.forEach((name, description) -> Logger.info(name + " -> " + description));
-		Logger.info("");
 	}
 
 }
