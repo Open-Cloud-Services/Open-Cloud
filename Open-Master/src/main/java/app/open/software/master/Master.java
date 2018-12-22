@@ -12,7 +12,9 @@ import app.open.software.core.command.CommandService;
 import app.open.software.core.config.DocumentFileProviderService;
 import app.open.software.core.logger.*;
 import app.open.software.core.service.ServiceCluster;
+import app.open.software.master.setup.MasterSetup;
 import com.bugsnag.Bugsnag;
+import java.io.*;
 import java.util.HashMap;
 import joptsimple.OptionSet;
 import lombok.Getter;
@@ -58,6 +60,14 @@ public class Master implements CloudApplication {
 		if (optionSet.has("time")) {
 			Logger.info("Time to start: " + (System.currentTimeMillis() - time) + " ms");
 		}
+
+		try {
+			new MasterSetup().setup(new BufferedReader(new InputStreamReader(System.in)));
+		} catch (IOException e) {
+			Logger.error("Reading of input failed!", e);
+		}
+
+		ServiceCluster.get(CommandService.class).start();
 	}
 
 	/**

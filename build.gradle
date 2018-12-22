@@ -4,7 +4,7 @@
  * The code is licensed under the MIT License, which can be found in the root directory of the repository
  */
 
-version '0.2'
+version '0.3'
 
 apply plugin: 'java'
 

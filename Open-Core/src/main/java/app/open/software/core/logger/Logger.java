@@ -94,10 +94,9 @@ public class Logger {
 	/**
 	 * @return Created and started {@link ProgressBarComponent}
 	 *
-	 * @param length Length of the file to download as bytes
+	 * @param component Instance of {@link ProgressBarComponent}
 	 */
-	public static ProgressBarComponent progress(final long length) {
-		final var component = new ProgressBarComponent(length);
+	public static ProgressBarComponent progress(final ProgressBarComponent component) {
 		queue.offer(component);
 		checkQueue();
 		return component;

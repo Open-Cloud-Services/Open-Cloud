@@ -56,14 +56,12 @@ public class CommandService implements Service {
 		} catch (IOException e) {
 			Logger.error("Could not load commands", e);
 		}
-
-		this.start();
 	}
 
 	/**
 	 * Start the Command-Dispatcher {@link Thread}
 	 */
-	private void start() {
+	public void start() {
 		this.running = true;
 
 		new ThreadBuilder("Command-Dispatcher", () -> {
