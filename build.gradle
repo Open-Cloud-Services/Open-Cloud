@@ -24,7 +24,8 @@ subprojects {
         testCompile 'junit:junit:4.12'
         testCompile 'org.mockito:mockito-all:1.10.19'
 
-        compileOnly 'org.projectlombok:lombok:1.18.2'
+        annotationProcessor 'org.projectlombok:lombok:1.18.2'
+        implementation 'org.projectlombok:lombok:1.18.2'
     }
 
     this.sourceCompatibility = 11
