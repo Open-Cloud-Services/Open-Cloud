@@ -37,7 +37,7 @@ public class MasterBootstrap {
 
 		final var parser = new OptionParser();
 		parser.allowsUnrecognizedOptions();
-		this.acceptArguments(parser);
+		this.setAcceptedArguments(parser);
 
 		final var set = parser.parse(args);
 
@@ -49,7 +49,7 @@ public class MasterBootstrap {
 	 *
 	 * @param parser {@link OptionParser} for accepting
 	 */
-	private void acceptArguments(final OptionParser parser) {
+	private void setAcceptedArguments(final OptionParser parser) {
 		parser.accepts("help");
 		parser.accepts("version");
 		parser.accepts("debug");
