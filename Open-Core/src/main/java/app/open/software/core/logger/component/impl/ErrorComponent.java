@@ -10,7 +10,6 @@ import app.open.software.core.logger.*;
 import app.open.software.core.logger.component.LoggerComponent;
 import app.open.software.core.logger.file.ErrorRecord;
 import java.io.IOException;
-import java.util.Date;
 import lombok.RequiredArgsConstructor;
 
 /**
