@@ -48,7 +48,7 @@ public class ServiceCluster {
 	}
 
 	/**
-	 * @return The service instance filtered by {@param type}
+	 * @return The service instance filtered by {@code type}
 	 *
 	 * @param type Class of the {@link Service}, which ist requested
 	 * @param <T> Type of the {@link Service} to cast it automatically to the wanted {@link Service}
