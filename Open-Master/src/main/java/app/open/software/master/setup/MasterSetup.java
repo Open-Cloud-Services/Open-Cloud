@@ -17,7 +17,7 @@ import java.io.*;
 import java.nio.file.Files;
 
 /**
- *
+ * Implementation of {@link Setup} to configure the setup of the Open-Master
  *
  * @author Tammo0987
  * @version 1.0
@@ -29,6 +29,8 @@ public class MasterSetup implements Setup {
 	 * {@inheritDoc}
 	 */
 	public void setup(final BufferedReader reader) throws IOException {
+		Logger.info("Welcome to the setup!");
+
 		final File proxyTemplate = new File("proxy");
 
 		if (Files.notExists(proxyTemplate.toPath())) {
@@ -79,8 +81,16 @@ public class MasterSetup implements Setup {
 				}
 			});
 		}
+
+		Logger.info("Setup complete!");
 	}
 
+	/**
+	 * Download a custom server software
+	 *
+	 * @param path Path where the server software will be located
+	 * @param reader {@link BufferedReader} to read user input
+	 */
 	private void downloadCustomServerSoftware(final String path, final BufferedReader reader) {
 		try {
 			new StringRequest("Type in your custom url for your server software:", reader).request(url -> {

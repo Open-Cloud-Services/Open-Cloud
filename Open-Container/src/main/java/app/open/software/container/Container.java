@@ -54,6 +54,8 @@ public class Container implements CloudApplication {
 		if (optionSet.has("time")) {
 			Logger.info("Time to start: " + (System.currentTimeMillis() - time) + " ms");
 		}
+
+		ServiceCluster.get(CommandService.class).start();
 	}
 
 	/**
