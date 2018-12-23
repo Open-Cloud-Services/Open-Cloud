@@ -4,10 +4,6 @@
  * The code is licensed under the MIT License, which can be found in the root directory of the repository
  */
 
-rootProject.name = "Open-Cloud"
-
-include ':Open-Container'
-include ':Open-Core'
-include ':Open-Master'
-include 'Open-Protocol'
-
+dependencies {
+    compile 'io.netty:netty-all:4.1.32.Final'
+}
