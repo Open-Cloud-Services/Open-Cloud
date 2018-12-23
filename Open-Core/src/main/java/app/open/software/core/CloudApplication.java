@@ -61,6 +61,7 @@ public interface CloudApplication {
 		map.put("version", "Print the current version of Open-Cloud");
 		map.put("debug", "Enable debug logging");
 		map.put("time", "Show after starting the time to start");
+		map.put("disable-updater", "Disable auto updater");
 
 		this.addParameterHelp(map);
 

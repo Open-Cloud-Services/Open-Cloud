@@ -12,6 +12,8 @@ import app.open.software.core.command.CommandService;
 import app.open.software.core.config.DocumentFileProviderService;
 import app.open.software.core.logger.*;
 import app.open.software.core.service.ServiceCluster;
+import app.open.software.core.updater.AutoUpdater;
+import app.open.software.core.updater.UpdateType;
 import app.open.software.master.setup.MasterSetup;
 import com.bugsnag.Bugsnag;
 import java.io.*;
@@ -44,6 +46,10 @@ public class Master implements CloudApplication {
 		final Bugsnag bugsnag = bugsnagBootstrap.getBugsnag();
 
 		Logger.setContext(new LoggerContext("Open-Master", optionSet.has("debug") ? LogLevel.DEBUG : LogLevel.INFO, bugsnag));
+
+		if (!optionSet.has("disable-updater") && new AutoUpdater(this.getVersion(), UpdateType.MASTER).checkForUpdate()) {
+			return;
+		}
 
 		if (this.handleParameters(optionSet)) {
 			return;

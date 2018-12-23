@@ -54,6 +54,7 @@ public class MasterBootstrap {
 		parser.accepts("version");
 		parser.accepts("debug");
 		parser.accepts("time");
+		parser.accepts("disable-updater");
 	}
 
 }
