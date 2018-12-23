@@ -11,6 +11,8 @@ import app.open.software.core.bugsnag.BugsnagBootstrap;
 import app.open.software.core.command.CommandService;
 import app.open.software.core.logger.*;
 import app.open.software.core.service.ServiceCluster;
+import app.open.software.core.updater.AutoUpdater;
+import app.open.software.core.updater.UpdateType;
 import com.bugsnag.Bugsnag;
 import java.util.HashMap;
 import joptsimple.OptionSet;
@@ -41,6 +43,10 @@ public class Container implements CloudApplication {
 		final Bugsnag bugsnag = bugsnagBootstrap.getBugsnag();
 
 		Logger.setContext(new LoggerContext("Open-Container", optionSet.has("debug") ? LogLevel.DEBUG : LogLevel.INFO, bugsnag));
+
+		if (!optionSet.has("disable-updater") && new AutoUpdater(this.getVersion(), UpdateType.CONTAINER).checkForUpdate()) {
+			return;
+		}
 
 		if (this.handleParameters(optionSet)) {
 			return;

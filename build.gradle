@@ -4,7 +4,7 @@
  * The code is licensed under the MIT License, which can be found in the root directory of the repository
  */
 
-version '0.3'
+version '0.3-alpha'
 
 apply plugin: 'java'
 
@@ -43,11 +43,11 @@ task createReleaseZip(type: Zip, dependsOn: ['Open-Container:shadowJar', 'Open-M
     }
 
     from('Open-Container/build/libs') {
-        include('Open-Container-' + this.version.toString() + '-all.jar')
+        include('Open-Container.jar')
     }
 
     from('Open-Master/build/libs') {
-        include('Open-Master-' + this.version.toString() + "-all.jar")
+        include('Open-Master.jar')
     }
 
     archiveName 'Open-Cloud-Release-' + this.version.toString() + ".zip"

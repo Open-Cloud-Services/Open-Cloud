@@ -29,3 +29,7 @@ jar {
         attributes 'Implementation-Version': version
     }
 }
+
+shadowJar {
+    archiveName = "${baseName}.${extension}"
+}
