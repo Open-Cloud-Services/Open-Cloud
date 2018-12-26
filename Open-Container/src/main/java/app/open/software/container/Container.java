@@ -6,6 +6,8 @@
 
 package app.open.software.container;
 
+import app.open.software.container.config.entity.ConfigEntity;
+import app.open.software.container.network.PacketHandler;
 import app.open.software.core.CloudApplication;
 import app.open.software.core.bugsnag.BugsnagBootstrap;
 import app.open.software.core.command.CommandService;
@@ -13,10 +15,17 @@ import app.open.software.core.logger.*;
 import app.open.software.core.service.ServiceCluster;
 import app.open.software.core.updater.AutoUpdater;
 import app.open.software.core.updater.UpdateType;
+import app.open.software.protocol.NetworkConnectionEntity;
+import app.open.software.protocol.ProtocolClient;
+import app.open.software.protocol.handler.PacketDecoder;
+import app.open.software.protocol.handler.PacketEncoder;
 import com.bugsnag.Bugsnag;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelInitializer;
 import java.util.HashMap;
 import joptsimple.OptionSet;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Open-Container main class to control everything
@@ -32,6 +41,12 @@ public class Container implements CloudApplication {
 	 */
 	@Getter
 	private static Container container;
+
+	private ProtocolClient protocolClient;
+
+	@Setter
+	@Getter
+	private ConfigEntity configEntity = new ConfigEntity();
 
 	/**
 	 * {@inheritDoc}
@@ -61,7 +76,7 @@ public class Container implements CloudApplication {
 			Logger.info("Time to start: " + (System.currentTimeMillis() - time) + " ms");
 		}
 
-		ServiceCluster.get(CommandService.class).start();
+		this.setupClient();
 	}
 
 	/**
@@ -72,7 +87,34 @@ public class Container implements CloudApplication {
 
 		ServiceCluster.stop();
 
+		if (this.protocolClient.isConnected()) {
+			this.protocolClient.disconnect(() -> Logger.info("Client disconnected!"));
+		}
+
 		Logger.info("Stopped Open-Container");
+	}
+
+	private void setupClient() {
+		this.registerPackets();
+
+		this.protocolClient = new ProtocolClient(new NetworkConnectionEntity(this.configEntity.getHost(), this.configEntity.getPort()))
+				.connect(() -> {
+					ServiceCluster.get(CommandService.class).start();
+					Logger.info("Successfully connected to Open-Master!");
+				}, () -> {
+					Logger.warn("Could not connect to Open-Master!");
+					this.shutdown();
+				}, new ChannelInitializer<>() {
+
+					protected void initChannel(final Channel channel) {
+						channel.pipeline().addLast(new PacketEncoder(), new PacketDecoder(), new PacketHandler());
+					}
+
+				});
+	}
+
+	private void registerPackets() {
+
 	}
 
 	/**

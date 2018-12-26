@@ -7,10 +7,12 @@
 package app.open.software.master.setup;
 
 import app.open.software.core.logger.Logger;
+import app.open.software.core.service.ServiceCluster;
 import app.open.software.core.setup.Setup;
 import app.open.software.core.setup.request.DownloadRequest;
 import app.open.software.core.setup.request.impl.ListRequest;
 import app.open.software.core.setup.request.impl.StringRequest;
+import app.open.software.master.container.ContainerEntityService;
 import app.open.software.master.setup.version.ProxyVersion;
 import app.open.software.master.setup.version.ServerVersion;
 import java.io.*;
@@ -29,6 +31,8 @@ public class MasterSetup implements Setup {
 	 * {@inheritDoc}
 	 */
 	public void setup(final BufferedReader reader) throws IOException {
+		if (!this.setupIsNeeded()) return;
+
 		Logger.info("Welcome to the setup!");
 
 		final File proxyTemplate = new File("proxy");
@@ -82,7 +86,11 @@ public class MasterSetup implements Setup {
 			});
 		}
 
-		Logger.info("Setup complete!");
+		if (ServiceCluster.get(ContainerEntityService.class).getContainerEntities().isEmpty()) {
+			Logger.info("To create a container use the following command: \"container create <host>\"!");
+		}
+
+		Logger.info("Setup completed!");
 	}
 
 	/**
@@ -108,6 +116,10 @@ public class MasterSetup implements Setup {
 		} catch (IOException e) {
 			Logger.error("Reading of input failed!", e);
 		}
+	}
+
+	private boolean setupIsNeeded() {
+		return !(new File("proxy//proxy.jar").exists()) || !(new File("global//server.jar").exists());
 	}
 
 }

@@ -6,6 +6,7 @@
 
 package app.open.software.protocol;
 
+import app.open.software.core.thread.ThreadBuilder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.epoll.*;
@@ -55,28 +56,32 @@ public class ProtocolServer {
 		this.bossGroup = this.EPOLL ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 		this.workerGroup = this.EPOLL ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 
-		try {
-			this.channelFuture = new ServerBootstrap()
-					.group(this.bossGroup, this.workerGroup)
-					.channel(this.EPOLL ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
-					.childHandler(initializer)
-					.bind(this.port)
-					.sync();
+		new ThreadBuilder("Protocol-Server", () -> {
 
-			complete.run();
+			try {
+				this.channelFuture = new ServerBootstrap()
+						.group(this.bossGroup, this.workerGroup)
+						.channel(this.EPOLL ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
+						.childHandler(initializer)
+						.bind(this.port)
+						.sync();
 
-			this.channelFuture.channel().closeFuture().sync();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} finally {
-			if (this.bossGroup != null) {
-				this.bossGroup.shutdownGracefully().syncUninterruptibly();
+				complete.run();
+
+				this.channelFuture.channel().closeFuture().sync();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} finally {
+				if (this.bossGroup != null) {
+					this.bossGroup.shutdownGracefully().syncUninterruptibly();
+				}
+
+				if (this.workerGroup != null) {
+					this.workerGroup.shutdownGracefully().syncUninterruptibly();
+				}
 			}
 
-			if (this.workerGroup != null) {
-				this.workerGroup.shutdownGracefully().syncUninterruptibly();
-			}
-		}
+		}).setDaemon().start();
 
 		return this;
 	}

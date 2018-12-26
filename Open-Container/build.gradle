@@ -20,6 +20,7 @@ apply plugin: 'com.github.johnrengelman.shadow'
 
 dependencies {
     compile project(':Open-Core')
+    compile project(':Open-Protocol')
 }
 
 jar {

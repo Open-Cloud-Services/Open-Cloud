@@ -14,12 +14,23 @@ import app.open.software.core.logger.*;
 import app.open.software.core.service.ServiceCluster;
 import app.open.software.core.updater.AutoUpdater;
 import app.open.software.core.updater.UpdateType;
+import app.open.software.master.config.ContainerConfig;
+import app.open.software.master.config.MasterConfig;
+import app.open.software.master.config.entity.ConfigEntity;
+import app.open.software.master.container.ContainerEntityService;
+import app.open.software.master.network.PacketHandler;
 import app.open.software.master.setup.MasterSetup;
+import app.open.software.protocol.ProtocolServer;
+import app.open.software.protocol.handler.PacketDecoder;
+import app.open.software.protocol.handler.PacketEncoder;
 import com.bugsnag.Bugsnag;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelInitializer;
 import java.io.*;
 import java.util.HashMap;
 import joptsimple.OptionSet;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Open-Master main class to control everything
@@ -37,10 +48,22 @@ public class Master implements CloudApplication {
 	private static Master master;
 
 	/**
+	 * Instance of {@link ProtocolServer}
+	 */
+	private ProtocolServer protocolServer;
+
+	/**
+	 * Instance of {@link ConfigEntity}
+	 */
+	@Setter
+	@Getter
+	private ConfigEntity configEntity = new ConfigEntity();
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public void start(final OptionSet optionSet, final long time) {
-		if(master == null) master = this;
+		if (master == null) master = this;
 
 		final BugsnagBootstrap bugsnagBootstrap = new BugsnagBootstrap("Open-Master", this.getVersion());
 		final Bugsnag bugsnag = bugsnagBootstrap.getBugsnag();
@@ -59,8 +82,15 @@ public class Master implements CloudApplication {
 
 		ServiceCluster.addServices(
 				new CommandService(),
+				new ContainerEntityService(),
 				new DocumentFileProviderService()
 		);
+
+		ServiceCluster.get(DocumentFileProviderService.class).addFiles(
+				new ContainerConfig(),
+				new MasterConfig()
+		);
+
 		ServiceCluster.init();
 
 		if (optionSet.has("time")) {
@@ -73,6 +103,8 @@ public class Master implements CloudApplication {
 			Logger.error("Reading of input failed!", e);
 		}
 
+		this.setupServer(this.configEntity.getPort());
+
 		ServiceCluster.get(CommandService.class).start();
 	}
 
@@ -84,7 +116,31 @@ public class Master implements CloudApplication {
 
 		ServiceCluster.stop();
 
+		try {
+			this.protocolServer.shutdown(() -> Logger.info("Closed server!"));
+		} catch (InterruptedException e) {
+			Logger.error("Server interrupted while closing", e);
+		}
+
 		Logger.info("Stopped Open-Master");
+	}
+
+	private void setupServer(final int port) {
+		this.registerPackets();
+
+		this.protocolServer = new ProtocolServer(port).bind(() -> Logger.info("Successfully bound server to port " + port), new ChannelInitializer<>() {
+
+			protected void initChannel(final Channel channel) {
+				channel.pipeline().addLast(new PacketEncoder(), new PacketDecoder(), new PacketHandler());
+				Logger.info("Container connected from " + ServiceCluster.get(ContainerEntityService.class).getHostByChannel(channel));
+			}
+
+		});
+
+	}
+
+	private void registerPackets() {
+
 	}
 
 	/**

@@ -6,11 +6,14 @@
 
 package app.open.software.protocol;
 
+import app.open.software.core.logger.Logger;
+import app.open.software.core.thread.ThreadBuilder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.epoll.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import java.net.ConnectException;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -34,9 +37,9 @@ public class ProtocolClient {
 	private EventLoopGroup workerGroup = this.EPOLL ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 
 	/**
-	 * {@link ChannelFuture} for disconnecting later
+	 * {@link Channel} for disconnecting later
 	 */
-	private ChannelFuture channelFuture;
+	private Channel channel;
 
 	/**
 	 * Epoll is available
@@ -51,27 +54,43 @@ public class ProtocolClient {
 	 *
 	 * @return Current instance
 	 */
-	public final ProtocolClient connect(final Runnable complete, final ChannelInitializer<Channel> initializer) {
-		try {
-			this.channelFuture = new Bootstrap()
-					.group(this.workerGroup)
-					.channel(this.EPOLL ? EpollSocketChannel.class : NioSocketChannel.class)
-					.handler(initializer)
-					.connect(this.networkConnectionEntity.getHost(), this.networkConnectionEntity.getPort())
-					.sync();
+	public final ProtocolClient connect(final Runnable complete, final Runnable failed, final ChannelInitializer<Channel> initializer) {
+		new ThreadBuilder("Protocol-Client", () -> {
 
-			complete.run();
+			try {
+				this.channel = new Bootstrap()
+						.group(this.workerGroup)
+						.channel(this.EPOLL ? EpollSocketChannel.class : NioSocketChannel.class)
+						.handler(initializer)
+						.connect(this.networkConnectionEntity.getHost(), this.networkConnectionEntity.getPort())
+						.addListener((ChannelFutureListener) future -> {
+							if (future.isSuccess()) {
+								complete.run();
+							} else {
+								failed.run();
+							}
+						})
+						.sync()
+						.channel();
 
-			this.channelFuture.channel().closeFuture().sync();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} finally {
-			if (this.workerGroup != null) {
-				this.workerGroup.shutdownGracefully().syncUninterruptibly();
+				this.channel.closeFuture().sync();
+			} catch (Exception e) {
+				if (!(e instanceof ConnectException)) {
+					Logger.error("Could not connect to the Open-Master", e);
+				}
+			} finally {
+				if (this.workerGroup != null) {
+					this.workerGroup.shutdownGracefully().syncUninterruptibly();
+				}
 			}
-		}
+
+		}).start();
 
 		return this;
+	}
+
+	public final boolean isConnected() {
+		return this.channel != null && this.channel.isOpen();
 	}
 
 	/**
@@ -79,16 +98,13 @@ public class ProtocolClient {
 	 *
 	 * @param disconnected {@link Runnable} which will executed when the {@link ProtocolClient} is disconnected
 	 *
-	 * @throws InterruptedException An error occurred
 	 */
-	public void disconnect(final Runnable disconnected) throws InterruptedException {
-		if (this.channelFuture != null) {
-			this.channelFuture.channel().closeFuture().sync();
+	public void disconnect(final Runnable disconnected) {
+		if (this.channel != null && this.channel.isOpen()) {
+			this.channel.close().syncUninterruptibly();
 		}
 
-		if (this.workerGroup != null) {
-			this.workerGroup.shutdownGracefully().sync();
-		}
+		disconnected.run();
 	}
 
 }
