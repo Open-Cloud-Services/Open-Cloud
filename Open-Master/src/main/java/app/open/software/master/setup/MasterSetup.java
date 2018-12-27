@@ -8,7 +8,6 @@ package app.open.software.master.setup;
 
 import app.open.software.core.logger.Logger;
 import app.open.software.core.service.ServiceCluster;
-import app.open.software.core.setup.Setup;
 import app.open.software.core.setup.request.DownloadRequest;
 import app.open.software.core.setup.request.impl.ListRequest;
 import app.open.software.core.setup.request.impl.StringRequest;
@@ -19,13 +18,13 @@ import java.io.*;
 import java.nio.file.Files;
 
 /**
- * Implementation of {@link Setup} to configure the setup of the Open-Master
+ * Setup to configure the setup of the Open-Master
  *
  * @author Tammo0987
  * @version 1.0
  * @since 0.3
  */
-public class MasterSetup implements Setup {
+public class MasterSetup {
 
 	/**
 	 * {@inheritDoc}

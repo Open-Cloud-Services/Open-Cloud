@@ -19,10 +19,16 @@ import app.open.software.master.config.MasterConfig;
 import app.open.software.master.config.entity.ConfigEntity;
 import app.open.software.master.container.ContainerEntityService;
 import app.open.software.master.network.PacketHandler;
+import app.open.software.master.network.packets.ContainerKeyValidationInPacket;
+import app.open.software.master.network.packets.ContainerKeyValidationResponseOutPacket;
 import app.open.software.master.setup.MasterSetup;
 import app.open.software.protocol.ProtocolServer;
 import app.open.software.protocol.handler.PacketDecoder;
 import app.open.software.protocol.handler.PacketEncoder;
+import app.open.software.protocol.packet.Packet;
+import app.open.software.protocol.packet.impl.ErrorPacket;
+import app.open.software.protocol.packet.impl.SuccessPacket;
+import app.open.software.protocol.packet.registry.PacketRegistry;
 import com.bugsnag.Bugsnag;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -116,31 +122,51 @@ public class Master implements CloudApplication {
 
 		ServiceCluster.stop();
 
-		try {
-			this.protocolServer.shutdown(() -> Logger.info("Closed server!"));
-		} catch (InterruptedException e) {
-			Logger.error("Server interrupted while closing", e);
+		if (this.protocolServer.isActive()) {
+			try {
+				this.protocolServer.shutdown(() -> Logger.info("Closed server!"));
+			} catch (InterruptedException e) {
+				Logger.error("Server interrupted while closing", e);
+			}
 		}
 
 		Logger.info("Stopped Open-Master");
+
+		System.exit(0);
 	}
 
+	/**
+	 * Bind the {@link ProtocolServer} to a port
+	 *
+	 * @param port Port of the {@link ProtocolServer}
+	 */
 	private void setupServer(final int port) {
 		this.registerPackets();
 
-		this.protocolServer = new ProtocolServer(port).bind(() -> Logger.info("Successfully bound server to port " + port), new ChannelInitializer<>() {
+		this.protocolServer =
+				new ProtocolServer(port).bind(() -> Logger.info("Successfully bound server to port " + port), this::shutdown, new ChannelInitializer<>() {
 
 			protected void initChannel(final Channel channel) {
 				channel.pipeline().addLast(new PacketEncoder(), new PacketDecoder(), new PacketHandler());
-				Logger.info("Container connected from " + ServiceCluster.get(ContainerEntityService.class).getHostByChannel(channel));
 			}
 
 		});
 
 	}
 
+	/**
+	 * Register {@link Packet}s to identify by id
+	 */
 	private void registerPackets() {
+		PacketRegistry.IN.addPacket(0, SuccessPacket.class);
+		PacketRegistry.IN.addPacket(1, ErrorPacket.class);
 
+		PacketRegistry.IN.addPacket(400, ContainerKeyValidationInPacket.class);
+
+		PacketRegistry.OUT.addPacket(0, SuccessPacket.class);
+		PacketRegistry.OUT.addPacket(1, ErrorPacket.class);
+
+		PacketRegistry.OUT.addPacket(401, ContainerKeyValidationResponseOutPacket.class);
 	}
 
 	/**

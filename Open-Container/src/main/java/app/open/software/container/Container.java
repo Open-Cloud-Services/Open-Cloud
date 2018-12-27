@@ -6,11 +6,16 @@
 
 package app.open.software.container;
 
+import app.open.software.container.config.ContainerConfig;
 import app.open.software.container.config.entity.ConfigEntity;
 import app.open.software.container.network.PacketHandler;
+import app.open.software.container.network.packets.ContainerKeyValidationOutPacket;
+import app.open.software.container.network.packets.ContainerKeyValidationResponseInPacket;
+import app.open.software.container.setup.ContainerSetup;
 import app.open.software.core.CloudApplication;
 import app.open.software.core.bugsnag.BugsnagBootstrap;
 import app.open.software.core.command.CommandService;
+import app.open.software.core.config.DocumentFileProviderService;
 import app.open.software.core.logger.*;
 import app.open.software.core.service.ServiceCluster;
 import app.open.software.core.updater.AutoUpdater;
@@ -19,9 +24,14 @@ import app.open.software.protocol.NetworkConnectionEntity;
 import app.open.software.protocol.ProtocolClient;
 import app.open.software.protocol.handler.PacketDecoder;
 import app.open.software.protocol.handler.PacketEncoder;
+import app.open.software.protocol.packet.Packet;
+import app.open.software.protocol.packet.impl.ErrorPacket;
+import app.open.software.protocol.packet.impl.SuccessPacket;
+import app.open.software.protocol.packet.registry.PacketRegistry;
 import com.bugsnag.Bugsnag;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
+import java.io.*;
 import java.util.HashMap;
 import joptsimple.OptionSet;
 import lombok.Getter;
@@ -42,8 +52,15 @@ public class Container implements CloudApplication {
 	@Getter
 	private static Container container;
 
+	/**
+	 * Instance of {@link ProtocolClient} to connect to the Open-Master
+	 */
+	@Getter
 	private ProtocolClient protocolClient;
 
+	/**
+	 * Instance of {@link ConfigEntity} as config object
+	 */
 	@Setter
 	@Getter
 	private ConfigEntity configEntity = new ConfigEntity();
@@ -70,10 +87,21 @@ public class Container implements CloudApplication {
 		this.printStartHeader("Open-Container");
 
 		ServiceCluster.addServices(new CommandService());
+
+		ServiceCluster.addServices(new DocumentFileProviderService().addFiles(
+				new ContainerConfig()
+		));
+
 		ServiceCluster.init();
 
 		if (optionSet.has("time")) {
 			Logger.info("Time to start: " + (System.currentTimeMillis() - time) + " ms");
+		}
+
+		try {
+			new ContainerSetup().setup(new BufferedReader(new InputStreamReader(System.in)));
+		} catch (IOException e) {
+			Logger.error("Could not read input from the console!", e);
 		}
 
 		this.setupClient();
@@ -92,15 +120,20 @@ public class Container implements CloudApplication {
 		}
 
 		Logger.info("Stopped Open-Container");
+
+		System.exit(0);
 	}
 
+	/**
+	 * Setup client and connect to the Open-Master
+	 */
 	private void setupClient() {
 		this.registerPackets();
 
 		this.protocolClient = new ProtocolClient(new NetworkConnectionEntity(this.configEntity.getHost(), this.configEntity.getPort()))
 				.connect(() -> {
 					ServiceCluster.get(CommandService.class).start();
-					Logger.info("Successfully connected to Open-Master!");
+					this.protocolClient.sendPacket(new ContainerKeyValidationOutPacket(this.configEntity.getKey()));
 				}, () -> {
 					Logger.warn("Could not connect to Open-Master!");
 					this.shutdown();
@@ -113,8 +146,19 @@ public class Container implements CloudApplication {
 				});
 	}
 
+	/**
+	 * Register {@link Packet}s to identify by id
+	 */
 	private void registerPackets() {
+		PacketRegistry.IN.addPacket(0, SuccessPacket.class);
+		PacketRegistry.IN.addPacket(1, ErrorPacket.class);
 
+		PacketRegistry.IN.addPacket(401, ContainerKeyValidationResponseInPacket.class);
+
+		PacketRegistry.OUT.addPacket(0, SuccessPacket.class);
+		PacketRegistry.OUT.addPacket(1, ErrorPacket.class);
+
+		PacketRegistry.OUT.addPacket(400, ContainerKeyValidationOutPacket.class);
 	}
 
 	/**

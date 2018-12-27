@@ -1,5 +1,6 @@
 package app.open.software.master.container;
 
+import app.open.software.core.logger.Logger;
 import app.open.software.core.service.Service;
 import io.netty.channel.Channel;
 import java.net.InetSocketAddress;
@@ -14,6 +15,16 @@ public class ContainerEntityService implements Service {
 
 	public static String generateKey() {
 		return UUID.randomUUID().toString().replace("-", "");
+	}
+
+	public void stop() {
+		this.containerEntities.forEach(containerEntity -> {
+			try {
+				containerEntity.disconnect();
+			} catch (InterruptedException e) {
+				Logger.error("Interrupted while disconnecting", e);
+			}
+		});
 	}
 
 	public void addContainer(final ContainerEntity containerEntity) {

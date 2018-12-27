@@ -6,6 +6,7 @@
 
 package app.open.software.protocol.packet;
 
+import app.open.software.protocol.packet.impl.SuccessPacket;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.channel.Channel;
@@ -45,6 +46,8 @@ public interface Packet {
 	 *
 	 * @return Response {@link Packet}
 	 */
-	Packet process(final Channel channel);
+	default Packet process(final Channel channel) {
+		return new SuccessPacket();
+	}
 
 }

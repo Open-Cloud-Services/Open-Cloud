@@ -8,12 +8,16 @@ package app.open.software.protocol;
 
 import app.open.software.core.logger.Logger;
 import app.open.software.core.thread.ThreadBuilder;
+import app.open.software.protocol.packet.Packet;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.epoll.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import java.net.ConnectException;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -34,12 +38,18 @@ public class ProtocolClient {
 	/**
 	 * {@link EventLoopGroup} to manage {@link Thread}s
 	 */
-	private EventLoopGroup workerGroup = this.EPOLL ? new EpollEventLoopGroup() : new NioEventLoopGroup();
+	private final EventLoopGroup workerGroup = this.EPOLL ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 
 	/**
 	 * {@link Channel} for disconnecting later
 	 */
 	private Channel channel;
+
+	/**
+	 * {@link Queue} to store all {@link Packet}s, which can not be sent, because the {@link Channel} is not active
+	 */
+	@Getter
+	private final Queue<Packet> packetQueue = new ConcurrentLinkedQueue<>();
 
 	/**
 	 * Epoll is available
@@ -89,6 +99,22 @@ public class ProtocolClient {
 		return this;
 	}
 
+	/**
+	 * Send a {@link Packet} to the Open-Master
+	 *
+	 * @param packet {@link Packet} instance
+	 */
+	public void sendPacket(final Packet packet) {
+		if (this.channel == null) {
+			this.packetQueue.offer(packet);
+		} else {
+			this.channel.writeAndFlush(packet);
+		}
+	}
+
+	/**
+	 * @return If the {@link ProtocolClient} is connected
+	 */
 	public final boolean isConnected() {
 		return this.channel != null && this.channel.isOpen();
 	}

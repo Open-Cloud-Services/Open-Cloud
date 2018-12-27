@@ -9,4 +9,6 @@ public class ConfigEntity {
 
 	private int port = 1024;
 
+	private String key = "";
+
 }

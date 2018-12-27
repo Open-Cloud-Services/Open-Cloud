@@ -15,6 +15,9 @@ public class ContainerEntity {
 	@Setter
 	private Channel channel;
 
+	@Setter
+	private boolean verified = false;
+
 	private final List<Packet> packetQueue = new ArrayList<>();
 
 	public void sendPacket(final Packet packet) {
@@ -26,7 +29,9 @@ public class ContainerEntity {
 	}
 
 	public void disconnect() throws InterruptedException {
-		this.channel.close().sync();
+		if (this.channel != null) {
+			this.channel.close().sync();
+		}
 	}
 
 	public final boolean isConnected() {

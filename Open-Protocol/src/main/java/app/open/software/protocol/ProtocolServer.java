@@ -6,12 +6,15 @@
 
 package app.open.software.protocol;
 
+import app.open.software.core.logger.Logger;
 import app.open.software.core.thread.ThreadBuilder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.epoll.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import java.net.BindException;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -45,14 +48,21 @@ public class ProtocolServer {
 	private ChannelFuture channelFuture;
 
 	/**
+	 * True if this server was bounded correctly to the port
+	 */
+	@Getter
+	private boolean active = false;
+
+	/**
 	 * Bind this {@link ProtocolServer} on a port
 	 *
-	 * @param complete {@link Runnable} which will be executed after the {@link ProtocolServer} was bind
+	 * @param success {@link Runnable} which will be executed after the {@link ProtocolServer} was bind
+	 * @param failed {@link Runnable} which will be executed if something failed
 	 * @param initializer {@link ChannelInitializer} to configure the {@link ChannelPipeline}
-	 *
 	 * @return Current instance
 	 */
-	public final ProtocolServer bind(final Runnable complete, final ChannelInitializer<Channel> initializer) {
+	public final ProtocolServer bind(final Runnable success, final Runnable failed, final ChannelInitializer<Channel> initializer) {
+
 		this.bossGroup = this.EPOLL ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 		this.workerGroup = this.EPOLL ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 
@@ -64,13 +74,22 @@ public class ProtocolServer {
 						.channel(this.EPOLL ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
 						.childHandler(initializer)
 						.bind(this.port)
-						.sync();
-
-				complete.run();
+						.addListener((ChannelFutureListener) future -> {
+							if (future.isSuccess()) {
+								success.run();
+								ProtocolServer.this.active = true;
+							}
+						}).sync();
 
 				this.channelFuture.channel().closeFuture().sync();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				if (!(e instanceof BindException)) {
+					Logger.error("Interrupted while binding server to the port!", e);
+				} else {
+					Logger.warn("Can not bind to the server port!");
+				}
+
+				failed.run();
 			} finally {
 				if (this.bossGroup != null) {
 					this.bossGroup.shutdownGracefully().syncUninterruptibly();

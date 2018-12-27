@@ -29,7 +29,7 @@ public class PacketEncoder extends MessageToByteEncoder<Packet> {
 		final int id = PacketRegistry.OUT.getIdByPacket(packet);
 
 		if (id == -1) {
-			throw new NullPointerException("Could not get id from packet " + packet.getClass().getSimpleName() + "!");
+			new NullPointerException("Could not get id from packet " + packet.getClass().getSimpleName() + "!").printStackTrace();
 		} else {
 			out.writeInt(id);
 			packet.write(new ByteBufOutputStream(out));
