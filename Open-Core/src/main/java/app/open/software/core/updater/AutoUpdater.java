@@ -8,7 +8,8 @@ package app.open.software.core.updater;
 
 import app.open.software.core.logger.Logger;
 import app.open.software.core.setup.request.DownloadRequest;
-import com.google.gson.*;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;

@@ -39,7 +39,7 @@ public class Logger {
 	/**
 	 * {@link Queue} to have an event driven architecture
 	 */
-	private static Queue<LoggerComponent> queue = new LinkedBlockingQueue<>();
+	private static final Queue<LoggerComponent> queue = new LinkedBlockingQueue<>();
 
 	/**
 	 * Log content with the {@link LogLevel#DEBUG}
@@ -92,14 +92,13 @@ public class Logger {
 	}
 
 	/**
-	 * @return Created and started {@link ProgressBarComponent}
+	 * Create and start a {@link ProgressBarComponent}
 	 *
 	 * @param component Instance of {@link ProgressBarComponent}
 	 */
-	public static ProgressBarComponent progress(final ProgressBarComponent component) {
+	public static void progress(final ProgressBarComponent component) {
 		queue.offer(component);
 		checkQueue();
-		return component;
 	}
 
 	/**

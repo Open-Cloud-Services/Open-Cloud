@@ -28,7 +28,7 @@ public class CommandHelper {
 	/**
 	 * List of sub commands
 	 */
-	private List<String> helpList = new ArrayList<>();
+	private final List<String> helpList = new ArrayList<>();
 
 	/**
 	 * Add sub commands to the list
