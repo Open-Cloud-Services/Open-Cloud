@@ -7,8 +7,9 @@
 package app.open.software.test.core;
 
 import app.open.software.core.CloudApplication;
-import org.junit.*;
 import static org.junit.Assert.assertNotNull;
+import org.junit.Before;
+import org.junit.Test;
 import static org.mockito.Mockito.*;
 
 public class CloudApplicationTest {
