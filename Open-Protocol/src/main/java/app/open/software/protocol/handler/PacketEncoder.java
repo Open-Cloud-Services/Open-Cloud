@@ -12,6 +12,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
+import java.io.IOException;
 
 /**
  * Encoding {@link Packet}s
@@ -25,11 +26,11 @@ public class PacketEncoder extends MessageToByteEncoder<Packet> {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected void encode(final ChannelHandlerContext ctx, final Packet packet, final ByteBuf out) throws Exception {
+	protected void encode(final ChannelHandlerContext ctx, final Packet packet, final ByteBuf out) throws IOException {
 		final int id = PacketRegistry.OUT.getIdByPacket(packet);
 
 		if (id == -1) {
-			new NullPointerException("Could not get id from packet " + packet.getClass().getSimpleName() + "!").printStackTrace();
+			new IllegalStateException("Could not get id from packet " + packet.getClass().getSimpleName() + "!").printStackTrace();
 		} else {
 			out.writeInt(id);
 			packet.write(new ByteBufOutputStream(out));
