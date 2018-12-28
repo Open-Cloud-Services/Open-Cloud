@@ -40,7 +40,7 @@ public class ProtocolServer {
 	/**
 	 * {@link EventLoopGroup}s to manage {@link Thread}s
 	 */
-	private EventLoopGroup bossGroup, workerGroup;
+	private EventLoopGroup bossGroup = this.declareEventLoopGroup(), workerGroup = this.declareEventLoopGroup();
 
 	/**
 	 * {@link ChannelFuture} for shutdown this {@link ProtocolServer}
@@ -62,16 +62,12 @@ public class ProtocolServer {
 	 * @return Current instance
 	 */
 	public final ProtocolServer bind(final Runnable success, final Runnable failed, final ChannelInitializer<Channel> initializer) {
-
-		this.bossGroup = this.EPOLL ? new EpollEventLoopGroup() : new NioEventLoopGroup();
-		this.workerGroup = this.EPOLL ? new EpollEventLoopGroup() : new NioEventLoopGroup();
-
 		new ThreadBuilder("Protocol-Server", () -> {
 
 			try {
-				this.channelFuture = new ServerBootstrap()
-						.group(this.bossGroup, this.workerGroup)
-						.channel(this.EPOLL ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
+				final var serverBootstrap = this.configureServerBootstrap();
+
+				this.channelFuture = serverBootstrap
 						.childHandler(initializer)
 						.bind(this.port)
 						.addListener((ChannelFutureListener) future -> {
@@ -91,12 +87,10 @@ public class ProtocolServer {
 
 				failed.run();
 			} finally {
-				if (this.bossGroup != null) {
-					this.bossGroup.shutdownGracefully().syncUninterruptibly();
-				}
-
-				if (this.workerGroup != null) {
-					this.workerGroup.shutdownGracefully().syncUninterruptibly();
+				try {
+					this.close();
+				} catch (InterruptedException e) {
+					Logger.error("Error while closing server", e);
 				}
 			}
 
@@ -113,7 +107,18 @@ public class ProtocolServer {
 	 * @throws InterruptedException An error occurred
 	 */
 	public void shutdown(final Runnable closed) throws InterruptedException {
-		if (this.channelFuture != null) {
+		this.close();
+
+		closed.run();
+	}
+
+	/**
+	 * Close the {@link ProtocolServer}
+	 *
+	 * @throws InterruptedException An error occurred
+	 */
+	private void close() throws InterruptedException{
+		if (this.channelFuture != null && this.channelFuture.channel().isOpen()) {
 			this.channelFuture.channel().close().sync();
 		}
 
@@ -124,8 +129,20 @@ public class ProtocolServer {
 		if (this.workerGroup != null) {
 			this.workerGroup.shutdownGracefully().sync();
 		}
+	}
 
-		closed.run();
+	/**
+	 * @return Configured {@link ServerBootstrap}
+	 */
+	private ServerBootstrap configureServerBootstrap() {
+		return new ServerBootstrap().group(this.bossGroup, this.workerGroup).channel(this.EPOLL ? EpollServerSocketChannel.class : NioServerSocketChannel.class);
+	}
+
+	/**
+	 * @return Configured {@link EventLoopGroup}
+	 */
+	private EventLoopGroup declareEventLoopGroup() {
+		return this.EPOLL ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 	}
 
 }
