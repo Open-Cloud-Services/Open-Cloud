@@ -34,6 +34,25 @@ public class MasterSetup {
 
 		Logger.info("Welcome to the setup!");
 
+		this.setupProxyJar(reader);
+
+		this.setupServerJar(reader);
+
+		if (ServiceCluster.get(ContainerEntityService.class).getContainerEntities().isEmpty()) {
+			Logger.info("To create a container use the following command: \"container create <host>\"!");
+		}
+
+		Logger.info("Setup completed!");
+	}
+
+	/**
+	 * Setup the Proxy jar file
+	 *
+	 * @param reader {@link BufferedReader} to read user input
+	 *
+	 * @throws IOException An I/O error occurred
+	 */
+	private void setupProxyJar(final BufferedReader reader) throws IOException {
 		final File proxyTemplate = new File("proxy");
 
 		if (Files.notExists(proxyTemplate.toPath())) {
@@ -52,7 +71,16 @@ public class MasterSetup {
 				}
 			});
 		}
+	}
 
+	/**
+	 * Setup the Server jar file
+	 *
+	 * @param reader {@link BufferedReader} to read user input
+	 *
+	 * @throws IOException An I/O error occurred
+	 */
+	private void setupServerJar(final BufferedReader reader) throws IOException{
 		final File globalTemplate = new File("global");
 
 		if (Files.notExists(globalTemplate.toPath())) {
@@ -84,12 +112,6 @@ public class MasterSetup {
 				}
 			});
 		}
-
-		if (ServiceCluster.get(ContainerEntityService.class).getContainerEntities().isEmpty()) {
-			Logger.info("To create a container use the following command: \"container create <host>\"!");
-		}
-
-		Logger.info("Setup completed!");
 	}
 
 	/**
@@ -117,6 +139,9 @@ public class MasterSetup {
 		}
 	}
 
+	/**
+	 * @return If setup is needed
+	 */
 	private boolean setupIsNeeded() {
 		return !(new File("proxy//proxy.jar").exists()) || !(new File("global//server.jar").exists());
 	}
