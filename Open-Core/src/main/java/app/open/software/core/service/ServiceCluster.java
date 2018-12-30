@@ -22,7 +22,7 @@ public class ServiceCluster {
 	/**
 	 * List which is holding all the instance of {@link Service}s
 	 */
-	private static ArrayList<Service> serviceList = new ArrayList<>();
+	private static final ArrayList<Service> serviceList = new ArrayList<>();
 
 	/**
 	 * Add as many {@link Service}s as you want to the {@link ServiceCluster#serviceList}

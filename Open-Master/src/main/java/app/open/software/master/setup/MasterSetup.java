@@ -7,30 +7,52 @@
 package app.open.software.master.setup;
 
 import app.open.software.core.logger.Logger;
-import app.open.software.core.setup.Setup;
+import app.open.software.core.service.ServiceCluster;
 import app.open.software.core.setup.request.DownloadRequest;
 import app.open.software.core.setup.request.impl.ListRequest;
 import app.open.software.core.setup.request.impl.StringRequest;
+import app.open.software.master.container.ContainerEntityService;
 import app.open.software.master.setup.version.ProxyVersion;
 import app.open.software.master.setup.version.ServerVersion;
 import java.io.*;
 import java.nio.file.Files;
 
 /**
- * Implementation of {@link Setup} to configure the setup of the Open-Master
+ * Setup to configure the setup of the Open-Master
  *
  * @author Tammo0987
  * @version 1.0
  * @since 0.3
  */
-public class MasterSetup implements Setup {
+public class MasterSetup {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public void setup(final BufferedReader reader) throws IOException {
+		if (!this.setupIsNeeded()) return;
+
 		Logger.info("Welcome to the setup!");
 
+		this.setupProxyJar(reader);
+
+		this.setupServerJar(reader);
+
+		if (ServiceCluster.get(ContainerEntityService.class).getContainerEntities().isEmpty()) {
+			Logger.info("To create a container use the following command: \"container create <host>\"!");
+		}
+
+		Logger.info("Setup completed!");
+	}
+
+	/**
+	 * Setup the Proxy jar file
+	 *
+	 * @param reader {@link BufferedReader} to read user input
+	 *
+	 * @throws IOException An I/O error occurred
+	 */
+	private void setupProxyJar(final BufferedReader reader) throws IOException {
 		final File proxyTemplate = new File("proxy");
 
 		if (Files.notExists(proxyTemplate.toPath())) {
@@ -49,7 +71,16 @@ public class MasterSetup implements Setup {
 				}
 			});
 		}
+	}
 
+	/**
+	 * Setup the Server jar file
+	 *
+	 * @param reader {@link BufferedReader} to read user input
+	 *
+	 * @throws IOException An I/O error occurred
+	 */
+	private void setupServerJar(final BufferedReader reader) throws IOException{
 		final File globalTemplate = new File("global");
 
 		if (Files.notExists(globalTemplate.toPath())) {
@@ -81,8 +112,6 @@ public class MasterSetup implements Setup {
 				}
 			});
 		}
-
-		Logger.info("Setup complete!");
 	}
 
 	/**
@@ -108,6 +137,13 @@ public class MasterSetup implements Setup {
 		} catch (IOException e) {
 			Logger.error("Reading of input failed!", e);
 		}
+	}
+
+	/**
+	 * @return If setup is needed
+	 */
+	private boolean setupIsNeeded() {
+		return !(new File("proxy//proxy.jar").exists()) || !(new File("global//server.jar").exists());
 	}
 
 }

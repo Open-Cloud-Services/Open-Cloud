@@ -93,30 +93,13 @@ public interface CloudApplication {
 		Logger.info("        | |                                                  ");
 		Logger.info("        |_|                                                  ");
 
-		this.delay(200);
-
 		Logger.info("");
 
 		Logger.info("Copyright (c) 2018 by Open-Software and contributors");
 		Logger.info("Java version -> " + System.getProperty("java.version") + ", OS -> " + System.getProperty("os.name"));
 		Logger.info("");
 
-		this.delay(200);
-
 		Logger.info("Starting " + module + "!");
-	}
-
-	/**
-	 * Delay the running {@link CloudApplication} for a nicer startup
-	 *
-	 * @param time The length of the delay
-	 */
-	default void delay(final long time) {
-		try {
-			Thread.sleep(time);
-		} catch (InterruptedException e) {
-			Logger.error("Could not sleep as thread", e);
-		}
 	}
 
 	/**

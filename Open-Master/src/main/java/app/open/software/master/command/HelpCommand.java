@@ -6,7 +6,8 @@
 
 package app.open.software.master.command;
 
-import app.open.software.core.command.*;
+import app.open.software.core.command.Command;
+import app.open.software.core.command.CommandHelper;
 import app.open.software.core.command.help.CommandHelpAction;
 
 /**

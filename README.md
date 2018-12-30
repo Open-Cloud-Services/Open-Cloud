@@ -34,4 +34,4 @@ the suggested or own features. In case you want to change something or if you ha
 
 ### Discord 
 
-Visit our [Discord](https://discordapp.com/invite/XynmGDC) server to get more informations about status updates and changes.
+Visit our [Discord](https://discordapp.com/invite/XynmGDC) server to get more information about status updates and changes.

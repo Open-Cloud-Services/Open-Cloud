@@ -9,3 +9,5 @@ rootProject.name = "Open-Cloud"
 include ':Open-Container'
 include ':Open-Core'
 include ':Open-Master'
+include ':Open-Protocol'
+

@@ -9,8 +9,7 @@ package app.open.software.core.config;
 import app.open.software.core.logger.Logger;
 import app.open.software.core.service.Service;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * {@link Service} to handle the config files
@@ -38,12 +37,12 @@ public class DocumentFileProviderService implements Service {
 	/**
 	 * Add {@link DocumentFile} to handle it with the {@link Service}
 	 *
-	 * @param file {@link DocumentFile} to add
+	 * @param files {@link DocumentFile}s to add
 	 *
 	 * @return instance
 	 */
-	public DocumentFileProviderService addFile(final DocumentFile file) {
-		this.files.add(file);
+	public DocumentFileProviderService addFiles(final DocumentFile... files) {
+		this.files.addAll(Arrays.asList(files));
 		return this;
 	}
 
