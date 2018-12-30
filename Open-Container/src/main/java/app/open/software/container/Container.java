@@ -11,6 +11,7 @@ import app.open.software.container.config.entity.ConfigEntity;
 import app.open.software.container.network.PacketHandler;
 import app.open.software.container.network.packets.ContainerKeyValidationOutPacket;
 import app.open.software.container.network.packets.ContainerKeyValidationResponseInPacket;
+import app.open.software.container.network.packets.connection.*;
 import app.open.software.container.setup.ContainerSetup;
 import app.open.software.core.CloudApplication;
 import app.open.software.core.bugsnag.BugsnagBootstrap;
@@ -41,7 +42,7 @@ import lombok.Setter;
  * Open-Container main class to control everything
  *
  * @author Tammo0987
- * @version 1.0
+ * @version 1.1
  * @since 0.1
  */
 public class Container implements CloudApplication {
@@ -116,7 +117,7 @@ public class Container implements CloudApplication {
 		ServiceCluster.stop();
 
 		if (this.protocolClient.isConnected()) {
-			this.protocolClient.disconnect(() -> Logger.info("Client disconnected!"));
+			this.protocolClient.disconnect(new ContainerDisconnectOutPacket(), () -> Logger.info("Client disconnected!"));
 		}
 
 		Logger.info("Stopped Open-Container");
@@ -132,8 +133,8 @@ public class Container implements CloudApplication {
 
 		this.protocolClient = new ProtocolClient(new NetworkConnectionEntity(this.configEntity.getHost(), this.configEntity.getPort()))
 				.connect(() -> {
-					ServiceCluster.get(CommandService.class).start();
 					this.protocolClient.sendPacket(new ContainerKeyValidationOutPacket(this.configEntity.getKey()));
+					ServiceCluster.get(CommandService.class).start();
 				}, () -> {
 					Logger.warn("Could not connect to Open-Master!");
 					this.shutdown();
@@ -155,10 +156,15 @@ public class Container implements CloudApplication {
 
 		PacketRegistry.IN.addPacket(401, ContainerKeyValidationResponseInPacket.class);
 
+		PacketRegistry.IN.addPacket(900, MasterTerminateConnectionInPacket.class);
+		PacketRegistry.IN.addPacket(901, UnknownContainerConnectionInPacket.class);
+
 		PacketRegistry.OUT.addPacket(0, SuccessPacket.class);
 		PacketRegistry.OUT.addPacket(1, ErrorPacket.class);
 
 		PacketRegistry.OUT.addPacket(400, ContainerKeyValidationOutPacket.class);
+
+		PacketRegistry.OUT.addPacket(902, ContainerDisconnectOutPacket.class);
 	}
 
 	/**

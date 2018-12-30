@@ -1,7 +1,6 @@
 package app.open.software.container.network;
 
 import app.open.software.container.Container;
-import app.open.software.core.logger.Logger;
 import app.open.software.protocol.ProtocolClient;
 import app.open.software.protocol.packet.Packet;
 import io.netty.channel.*;
@@ -10,7 +9,7 @@ import io.netty.channel.*;
  * Handle {@link Packet}s and {@link Channel} states
  *
  * @author Tammo0987
- * @version 1.0
+ * @version 1.1
  * @since 0.4
  */
 public class PacketHandler extends SimpleChannelInboundHandler<Packet> {
@@ -34,16 +33,6 @@ public class PacketHandler extends SimpleChannelInboundHandler<Packet> {
 	protected void channelRead0(final ChannelHandlerContext ctx, final Packet packet) {
 		final Packet response = packet.process(ctx.channel());
 		if (response != null) ctx.writeAndFlush(response);
-	}
-
-	/**
-	 * Invoked if the Open-Master close the {@link Channel} from the {@link ProtocolClient}
-	 *
-	 * @param ctx {@link ChannelHandlerContext} from netty
-	 */
-	public void channelInactive(final ChannelHandlerContext ctx) {
-		Logger.info("Open-Master has terminated the connection!");
-		Container.getContainer().shutdown();
 	}
 
 }

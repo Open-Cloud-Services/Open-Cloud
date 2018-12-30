@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
  * {@link ProtocolClient} to connect to a {@link ProtocolServer}
  *
  * @author Tammo0987
- * @version 1.0
+ * @version 1.1
  * @since 0.4
  */
 @RequiredArgsConstructor
@@ -122,12 +122,13 @@ public class ProtocolClient {
 	/**
 	 * Disconnect from a {@link ProtocolServer}
 	 *
+	 * @param disconnectPacket {@link Packet} which will be send before disconnecting
 	 * @param disconnected {@link Runnable} which will executed when the {@link ProtocolClient} is disconnected
 	 *
 	 */
-	public void disconnect(final Runnable disconnected) {
+	public void disconnect(final Packet disconnectPacket, final Runnable disconnected) {
 		if (this.channel != null && this.channel.isOpen()) {
-			this.channel.close().syncUninterruptibly();
+			this.channel.writeAndFlush(disconnectPacket).addListener(ChannelFutureListener.CLOSE).syncUninterruptibly();
 		}
 
 		disconnected.run();

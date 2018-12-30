@@ -21,6 +21,7 @@ import app.open.software.master.container.ContainerEntityService;
 import app.open.software.master.network.PacketHandler;
 import app.open.software.master.network.packets.ContainerKeyValidationInPacket;
 import app.open.software.master.network.packets.ContainerKeyValidationResponseOutPacket;
+import app.open.software.master.network.packets.connection.*;
 import app.open.software.master.setup.MasterSetup;
 import app.open.software.protocol.ProtocolServer;
 import app.open.software.protocol.handler.PacketDecoder;
@@ -42,7 +43,7 @@ import lombok.Setter;
  * Open-Master main class to control everything
  *
  * @author Tammo0987
- * @version 1.1
+ * @version 1.2
  * @since 0.1
  */
 public class Master implements CloudApplication {
@@ -143,8 +144,7 @@ public class Master implements CloudApplication {
 	private void setupServer(final int port) {
 		this.registerPackets();
 
-		this.protocolServer =
-				new ProtocolServer(port).bind(() -> Logger.info("Successfully bound server to port " + port), this::shutdown, new ChannelInitializer<>() {
+		this.protocolServer = new ProtocolServer(port).bind(() -> Logger.info("Successfully bound server to port " + port), this::shutdown, new ChannelInitializer<>() {
 
 			protected void initChannel(final Channel channel) {
 				channel.pipeline().addLast(new PacketEncoder(), new PacketDecoder(), new PacketHandler());
@@ -163,10 +163,15 @@ public class Master implements CloudApplication {
 
 		PacketRegistry.IN.addPacket(400, ContainerKeyValidationInPacket.class);
 
+		PacketRegistry.IN.addPacket(902, ContainerDisconnectInPacket.class);
+
 		PacketRegistry.OUT.addPacket(0, SuccessPacket.class);
 		PacketRegistry.OUT.addPacket(1, ErrorPacket.class);
 
 		PacketRegistry.OUT.addPacket(401, ContainerKeyValidationResponseOutPacket.class);
+
+		PacketRegistry.OUT.addPacket(900, MasterTerminateConnectionOutPacket.class);
+		PacketRegistry.OUT.addPacket(901, UnknownContainerConnectionOutPacket.class);
 	}
 
 	/**
