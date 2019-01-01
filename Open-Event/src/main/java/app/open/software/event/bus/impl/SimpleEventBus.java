@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- *
+ * Simple implementation of the {@link EventBus} interface
  *
  * @author Tammo0987
  * @version 1.0
