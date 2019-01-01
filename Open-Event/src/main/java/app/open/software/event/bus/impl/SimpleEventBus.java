@@ -28,7 +28,7 @@ public class SimpleEventBus implements EventBus {
 	/**
 	 * {@link Map} of all registered {@link Event}s
 	 */
-	final Map<Class<? extends Event>, List<EventMethodData>> registeredEvents = new HashMap<>();
+	private final Map<Class<? extends Event>, List<EventMethodData>> registeredEvents = new HashMap<>();
 
 	/**
 	 * {@inheritDoc}
