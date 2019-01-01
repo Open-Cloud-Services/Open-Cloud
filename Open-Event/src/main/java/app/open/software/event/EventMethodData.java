@@ -22,11 +22,11 @@ public class EventMethodData {
 	/**
 	 * Instance of the listener
 	 */
-	final Object source;
+	private final Object source;
 
 	/**
 	 * Event {@link Method} to invoke later
 	 */
-	final Method method;
+	private final Method method;
 
 }
