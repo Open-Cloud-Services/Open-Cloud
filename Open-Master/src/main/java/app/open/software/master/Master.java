@@ -14,6 +14,7 @@ import app.open.software.core.logger.*;
 import app.open.software.core.service.ServiceCluster;
 import app.open.software.core.updater.AutoUpdater;
 import app.open.software.core.updater.UpdateType;
+import app.open.software.event.service.EventService;
 import app.open.software.master.config.ContainerConfig;
 import app.open.software.master.config.MasterConfig;
 import app.open.software.master.config.entity.ConfigEntity;
@@ -90,6 +91,7 @@ public class Master implements CloudApplication {
 		ServiceCluster.addServices(
 				new CommandService(),
 				new ContainerEntityService(),
+				new EventService(),
 				new DocumentFileProviderService()
 		);
 
