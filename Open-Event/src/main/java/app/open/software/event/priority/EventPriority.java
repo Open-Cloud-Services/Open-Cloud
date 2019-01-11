@@ -8,7 +8,8 @@ package app.open.software.event.priority;
 
 import app.open.software.event.Event;
 import app.open.software.event.bus.EventBus;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Set the priority of an {@link Event}
