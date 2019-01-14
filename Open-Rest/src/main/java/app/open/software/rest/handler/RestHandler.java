@@ -4,22 +4,20 @@
  * The code is licensed under the MIT License, which can be found in the root directory of the repository
  */
 
-package app.open.software.rest.handler
-
-import io.ktor.routing.Route
+package app.open.software.rest.handler;
 
 /**
- * Handler interface to add different routes to the Rest API
+ * Rest handler interface to implement different rest api handler
  *
  * @author Tammo0987
  * @version 1.0
  * @since 0.6
  */
-interface RestHandler {
+public interface RestHandler {
 
-    /**
-     * Function to add routes
-     */
-    fun route(): Route.() -> Unit
+	/**
+	 * Register all the routes from this handler
+	 */
+	void route();
 
 }

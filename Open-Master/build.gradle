@@ -22,6 +22,7 @@ dependencies {
     compile project(':Open-Core')
     compile project(':Open-Protocol')
     compile project(':Open-Event')
+    compile project(':Open-Rest')
 }
 
 jar {

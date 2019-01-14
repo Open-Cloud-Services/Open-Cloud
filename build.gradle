@@ -9,8 +9,6 @@ version '0.5-alpha'
 apply plugin: 'java'
 
 subprojects {
-    if (it.name == 'Open-Rest') return
-
     apply plugin: 'java'
 
     group 'app.open.software'
@@ -32,6 +30,10 @@ subprojects {
     this.targetCompatibility = 11
 
     compileJava.options.encoding 'UTF-8'
+}
+
+configurations.all {
+    exclude group: "org.slf4j", module: "slf4j-api"
 }
 
 task createReleaseZip(type: Zip, dependsOn: ['Open-Container:shadowJar', 'Open-Master:shadowJar']) {
