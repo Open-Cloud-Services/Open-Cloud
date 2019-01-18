@@ -65,8 +65,6 @@ public class WebServer {
 		before("/*", auth);
 
 		this.versions.forEach(RestVersion::init);
-
-		init();
 	}
 
 	/**
