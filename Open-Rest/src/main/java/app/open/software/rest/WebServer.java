@@ -51,9 +51,7 @@ public class WebServer {
 	 * Init the web server
 	 */
 	private void initWebServer(final Filter auth) {
-		exception(Exception.class, (exception, request, response) -> {
-			Logger.error(exception.getMessage(), exception);
-		});
+		exception(Exception.class, (exception, request, response) -> Logger.error(exception.getMessage(), exception));
 
 		before("/*", (request, response) -> {
 			final String path = request.pathInfo();

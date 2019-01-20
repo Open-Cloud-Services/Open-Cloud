@@ -40,7 +40,7 @@ public class ProtocolServer {
 	/**
 	 * {@link EventLoopGroup}s to manage {@link Thread}s
 	 */
-	private EventLoopGroup bossGroup = this.declareEventLoopGroup(), workerGroup = this.declareEventLoopGroup();
+	private final EventLoopGroup bossGroup = this.declareEventLoopGroup(), workerGroup = this.declareEventLoopGroup();
 
 	/**
 	 * {@link ChannelFuture} for shutdown this {@link ProtocolServer}
