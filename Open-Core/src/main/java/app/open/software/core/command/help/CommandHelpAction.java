@@ -33,6 +33,7 @@ public class CommandHelpAction {
 			final var command = ServiceCluster.get(CommandService.class).getCommands().get(args[0]);
 			if (command == null) {
 				Logger.info("Unknown command! Type help for help...");
+				return false;
 			}
 
 			if (command.helper() != null) {
