@@ -24,6 +24,7 @@ import app.open.software.master.network.packets.ContainerKeyValidationInPacket;
 import app.open.software.master.network.packets.ContainerKeyValidationResponseOutPacket;
 import app.open.software.master.network.packets.connection.*;
 import app.open.software.master.setup.MasterSetup;
+import app.open.software.master.template.TemplateDeploymentHandler;
 import app.open.software.protocol.ProtocolServer;
 import app.open.software.protocol.handler.PacketDecoder;
 import app.open.software.protocol.handler.PacketEncoder;
@@ -32,6 +33,7 @@ import app.open.software.protocol.packet.impl.ErrorPacket;
 import app.open.software.protocol.packet.impl.SuccessPacket;
 import app.open.software.protocol.packet.registry.PacketRegistry;
 import app.open.software.rest.WebServer;
+import app.open.software.rest.version.RestVersion;
 import com.bugsnag.Bugsnag;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -123,6 +125,7 @@ public class Master implements CloudApplication {
 		this.setupServer(this.configEntity.getPort());
 
 		this.webServer = new WebServer(8080);
+		this.webServer.registerVersions(new RestVersion(1).registerHandlers(new TemplateDeploymentHandler()));
 
 		this.webServer.start((request, response) -> {
 			if (request.headers("X-Auth-Token") == null || ServiceCluster.get(ContainerEntityService.class).getContainerMetas().stream().noneMatch(containerMeta -> containerMeta.getKey().equals(request.headers("X-Auth-Token")))) {
