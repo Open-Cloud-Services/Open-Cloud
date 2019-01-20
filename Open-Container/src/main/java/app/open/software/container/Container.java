@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Open-Software and contributors
+ * Copyright (c) 2018 - 2019, Open-Software and contributors
  *
  * The code is licensed under the MIT License, which can be found in the root directory of the repository
  */
@@ -21,6 +21,7 @@ import app.open.software.core.logger.*;
 import app.open.software.core.service.ServiceCluster;
 import app.open.software.core.updater.AutoUpdater;
 import app.open.software.core.updater.UpdateType;
+import app.open.software.event.service.EventService;
 import app.open.software.protocol.NetworkConnectionEntity;
 import app.open.software.protocol.ProtocolClient;
 import app.open.software.protocol.handler.PacketDecoder;
@@ -87,7 +88,10 @@ public class Container implements CloudApplication {
 
 		this.printStartHeader("Open-Container");
 
-		ServiceCluster.addServices(new CommandService());
+		ServiceCluster.addServices(
+				new CommandService(),
+				new EventService()
+				);
 
 		ServiceCluster.addServices(new DocumentFileProviderService().addFiles(
 				new ContainerConfig()

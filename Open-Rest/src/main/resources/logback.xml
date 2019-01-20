@@ -1,0 +1,19 @@
+<!--
+  ~ Copyright (c) 2018 - 2019, Open-Software and contributors
+  ~
+  ~ The code is licensed under the MIT License, which can be found in the root directory of the repository
+  -->
+
+<configuration debug="false">
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="Off">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>

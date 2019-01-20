@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Open-Software and contributors
+ * Copyright (c) 2018 - 2019, Open-Software and contributors
  *
  * The code is licensed under the MIT License, which can be found in the root directory of the repository
  */
@@ -14,6 +14,7 @@ import app.open.software.core.logger.*;
 import app.open.software.core.service.ServiceCluster;
 import app.open.software.core.updater.AutoUpdater;
 import app.open.software.core.updater.UpdateType;
+import app.open.software.event.service.EventService;
 import app.open.software.master.config.ContainerConfig;
 import app.open.software.master.config.MasterConfig;
 import app.open.software.master.config.entity.ConfigEntity;
@@ -23,6 +24,7 @@ import app.open.software.master.network.packets.ContainerKeyValidationInPacket;
 import app.open.software.master.network.packets.ContainerKeyValidationResponseOutPacket;
 import app.open.software.master.network.packets.connection.*;
 import app.open.software.master.setup.MasterSetup;
+import app.open.software.master.template.TemplateDeploymentHandler;
 import app.open.software.protocol.ProtocolServer;
 import app.open.software.protocol.handler.PacketDecoder;
 import app.open.software.protocol.handler.PacketEncoder;
@@ -30,6 +32,8 @@ import app.open.software.protocol.packet.Packet;
 import app.open.software.protocol.packet.impl.ErrorPacket;
 import app.open.software.protocol.packet.impl.SuccessPacket;
 import app.open.software.protocol.packet.registry.PacketRegistry;
+import app.open.software.rest.WebServer;
+import app.open.software.rest.version.RestVersion;
 import com.bugsnag.Bugsnag;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -38,6 +42,8 @@ import java.util.HashMap;
 import joptsimple.OptionSet;
 import lombok.Getter;
 import lombok.Setter;
+import org.eclipse.jetty.http.HttpStatus;
+import static spark.Spark.halt;
 
 /**
  * Open-Master main class to control everything
@@ -67,6 +73,11 @@ public class Master implements CloudApplication {
 	private ConfigEntity configEntity = new ConfigEntity();
 
 	/**
+	 * Instance of {@link WebServer}
+	 */
+	private WebServer webServer;
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public void start(final OptionSet optionSet, final long time) {
@@ -90,6 +101,7 @@ public class Master implements CloudApplication {
 		ServiceCluster.addServices(
 				new CommandService(),
 				new ContainerEntityService(),
+				new EventService(),
 				new DocumentFileProviderService()
 		);
 
@@ -112,6 +124,15 @@ public class Master implements CloudApplication {
 
 		this.setupServer(this.configEntity.getPort());
 
+		this.webServer = new WebServer(8080);
+		this.webServer.registerVersions(new RestVersion(1).registerHandlers(new TemplateDeploymentHandler()));
+
+		this.webServer.start((request, response) -> {
+			if (request.headers("X-Auth-Token") == null || ServiceCluster.get(ContainerEntityService.class).getContainerMetas().stream().noneMatch(containerMeta -> containerMeta.getKey().equals(request.headers("X-Auth-Token")))) {
+				halt(HttpStatus.UNAUTHORIZED_401);
+			}
+		});
+
 		ServiceCluster.get(CommandService.class).start();
 	}
 
@@ -130,6 +151,8 @@ public class Master implements CloudApplication {
 				Logger.error("Server interrupted while closing", e);
 			}
 		}
+
+		this.webServer.stop();
 
 		Logger.info("Stopped Open-Master");
 
