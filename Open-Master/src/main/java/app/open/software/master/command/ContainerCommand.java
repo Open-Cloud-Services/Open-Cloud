@@ -44,13 +44,13 @@ public class ContainerCommand implements Command {
 						Logger.warn("Container already exists!");
 						return true;
 					}
-					final String key = ContainerEntityService.generateKey();
+					final String key = ContainerEntityService.generateToken();
 					final ContainerEntity newContainer = new ContainerEntity(new ContainerMeta(UUID.randomUUID(), host, key));
 
 					ServiceCluster.get(ContainerEntityService.class).addContainer(newContainer);
 
 					Logger.info("Added new container @" + host);
-					Logger.info("Key for the container -> " + key);
+					Logger.info("Token for the container -> " + key);
 					return true;
 
 				case "delete":

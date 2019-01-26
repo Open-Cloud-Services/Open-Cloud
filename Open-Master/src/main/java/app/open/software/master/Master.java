@@ -19,24 +19,11 @@ import app.open.software.master.config.ContainerConfig;
 import app.open.software.master.config.MasterConfig;
 import app.open.software.master.config.entity.ConfigEntity;
 import app.open.software.master.container.ContainerEntityService;
-import app.open.software.master.network.PacketHandler;
-import app.open.software.master.network.packets.ContainerKeyValidationInPacket;
-import app.open.software.master.network.packets.ContainerKeyValidationResponseOutPacket;
-import app.open.software.master.network.packets.connection.*;
 import app.open.software.master.setup.MasterSetup;
 import app.open.software.master.template.TemplateDeploymentHandler;
-import app.open.software.protocol.ProtocolServer;
-import app.open.software.protocol.handler.PacketDecoder;
-import app.open.software.protocol.handler.PacketEncoder;
-import app.open.software.protocol.packet.Packet;
-import app.open.software.protocol.packet.impl.ErrorPacket;
-import app.open.software.protocol.packet.impl.SuccessPacket;
-import app.open.software.protocol.packet.registry.PacketRegistry;
 import app.open.software.rest.WebServer;
 import app.open.software.rest.version.RestVersion;
 import com.bugsnag.Bugsnag;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelInitializer;
 import java.io.*;
 import java.util.HashMap;
 import joptsimple.OptionSet;
@@ -59,11 +46,6 @@ public class Master implements CloudApplication {
 	 */
 	@Getter
 	private static Master master;
-
-	/**
-	 * Instance of {@link ProtocolServer}
-	 */
-	private ProtocolServer protocolServer;
 
 	/**
 	 * Instance of {@link ConfigEntity}
@@ -122,13 +104,11 @@ public class Master implements CloudApplication {
 			Logger.error("Reading of input failed!", e);
 		}
 
-		this.setupServer(this.configEntity.getPort());
-
 		this.webServer = new WebServer(8080);
 		this.webServer.registerVersions(new RestVersion(1).registerHandlers(new TemplateDeploymentHandler()));
 
 		this.webServer.start((request, response) -> {
-			if (request.headers("X-Auth-Token") == null || ServiceCluster.get(ContainerEntityService.class).getContainerMetas().stream().noneMatch(containerMeta -> containerMeta.getKey().equals(request.headers("X-Auth-Token")))) {
+			if (request.headers("X-Auth-Token") == null || ServiceCluster.get(ContainerEntityService.class).getContainerMetas().stream().noneMatch(containerMeta -> containerMeta.getToken().equals(request.headers("X-Auth-Token")))) {
 				halt(HttpStatus.UNAUTHORIZED_401);
 			}
 		});
@@ -144,57 +124,11 @@ public class Master implements CloudApplication {
 
 		ServiceCluster.stop();
 
-		if (this.protocolServer.isActive()) {
-			try {
-				this.protocolServer.shutdown(() -> Logger.info("Closed server!"));
-			} catch (InterruptedException e) {
-				Logger.error("Server interrupted while closing", e);
-			}
-		}
-
 		this.webServer.stop();
 
 		Logger.info("Stopped Open-Master");
 
 		System.exit(0);
-	}
-
-	/**
-	 * Bind the {@link ProtocolServer} to a port
-	 *
-	 * @param port Port of the {@link ProtocolServer}
-	 */
-	private void setupServer(final int port) {
-		this.registerPackets();
-
-		this.protocolServer = new ProtocolServer(port).bind(() -> Logger.info("Successfully bound server to port " + port), this::shutdown, new ChannelInitializer<>() {
-
-			protected void initChannel(final Channel channel) {
-				channel.pipeline().addLast(new PacketEncoder(), new PacketDecoder(), new PacketHandler());
-			}
-
-		});
-
-	}
-
-	/**
-	 * Register {@link Packet}s to identify by id
-	 */
-	private void registerPackets() {
-		PacketRegistry.IN.addPacket(0, SuccessPacket.class);
-		PacketRegistry.IN.addPacket(1, ErrorPacket.class);
-
-		PacketRegistry.IN.addPacket(400, ContainerKeyValidationInPacket.class);
-
-		PacketRegistry.IN.addPacket(902, ContainerDisconnectInPacket.class);
-
-		PacketRegistry.OUT.addPacket(0, SuccessPacket.class);
-		PacketRegistry.OUT.addPacket(1, ErrorPacket.class);
-
-		PacketRegistry.OUT.addPacket(401, ContainerKeyValidationResponseOutPacket.class);
-
-		PacketRegistry.OUT.addPacket(900, MasterTerminateConnectionOutPacket.class);
-		PacketRegistry.OUT.addPacket(901, UnknownContainerConnectionOutPacket.class);
 	}
 
 	/**

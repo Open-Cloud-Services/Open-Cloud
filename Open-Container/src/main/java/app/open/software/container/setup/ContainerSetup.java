@@ -25,11 +25,11 @@ public class ContainerSetup {
 	 * {@inheritDoc}
 	 */
 	public void setup(final BufferedReader reader) throws IOException {
-		if (!Container.getContainer().getConfigEntity().getKey().isEmpty()) {
+		if (!Container.getContainer().getConfigEntity().getToken().isEmpty()) {
 			return;
 		} else {
 			Logger.info("Welcome to the setup!");
-			new StringRequest("Type in the key from the Open-Master", reader).request(key -> Container.getContainer().getConfigEntity().setKey(key));
+			new StringRequest("Type in the token from the Open-Master", reader).request(token -> Container.getContainer().getConfigEntity().setToken(token));
 		}
 
 		Logger.info("Setup completed!");
